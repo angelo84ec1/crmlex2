@@ -1,0 +1,4 @@
+1. add new file .env in root directory 
+2. paste this in .env file 
+
+    VITE_REACT_API_URL="https://crm.thewebconcept.com"
