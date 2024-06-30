@@ -15,7 +15,8 @@ import { useSelector } from "react-redux";
 export default function CustomPieChart() {
   const { t } = useTranslation()
   const { dashboardData } = useSelector(state => state.Dashboard)
-  const COLORS = ["#FFB946", "#2ED47A", "#F7685B", "#50D1AA"];
+  // const COLORS = ["#FFB946", "#2ED47A", "#F7685B", "#50D1AA","#CD500C"];
+  const COLORS = ["#D9BB41", "#4A00E0", "#2ED47A", "#8E2DE2","#CD500C"];
 
 // console.log(dashboardData)
   const Bullet = ({ backgroundColor, size }) => {
@@ -52,9 +53,11 @@ export default function CustomPieChart() {
 
  
   const data01 = [
+    { name: `${t('pending')}`, value: dashboardData.pending_projects},
     { name: `${t('active')}`, value: dashboardData.active_projects },
     { name: `${t('completed')}`, value: dashboardData.completed_projects },
-    { name: `${t('pending')}`, value: dashboardData.pending_projects}
+    { name: `${t('new')}`, value: dashboardData.newProjects},
+    { name: `${t('late')}`, value: dashboardData.lateProjects}
   ];
 
 

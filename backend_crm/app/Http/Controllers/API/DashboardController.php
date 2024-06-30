@@ -107,6 +107,8 @@ class DashboardController extends Controller
         $completedProjects = Project::where('project_status', 'completed')->count();
         $activeProjects = Project::where('project_status', 'active')->count();
         $endedProjects = Project::where('project_status', 'ended')->count();
+        $lateProjects = Project::where('project_status', 'late')->count();
+        $newProjects = Project::where('project_status', 'new')->count();
         $pendingProjects = Project::where('project_status', 'pending')->count();
 
         $graphData = [
@@ -156,7 +158,9 @@ class DashboardController extends Controller
             'active_projects' => $activeProjects,
             'ended_projects' => $endedProjects,
             'pending_projects' => $pendingProjects,
-            'latest_projects' => $projects
+            'latest_projects' => $projects,
+            'newProjects' => $newProjects,
+            'lateProjects' => $lateProjects
 
         ];
 

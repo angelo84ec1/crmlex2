@@ -14,9 +14,9 @@ import {getSchedule} from "../../../Redux/userReducer.js";
 import {fetchDashboard, fetchGanttChart} from "../../../Redux/dashboardReducer.js";
 const ProjectStatus = React.forwardRef(function ProjectStatus({ props }, ref) {
     const [open, setOpen] = React.useState(false);
-    const dispatch = useDispatch()
-    const { status, projectStatus } = useSelector(state => state.TaskReducer)
-    const { user} = useSelector(state => state.Auth)
+    const dispatch = useDispatch();
+    const { status, projectStatus } = useSelector(state => state.TaskReducer);
+    const { user} = useSelector(state => state.Auth);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -24,10 +24,10 @@ const ProjectStatus = React.forwardRef(function ProjectStatus({ props }, ref) {
     const handleClose = () => {
         setOpen(false);
     };
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
     React.useEffect(() => {
-        console.log("okay");
+        console.log(projectStatus.message)
         if (projectStatus.message) {
             swal(
                 {
@@ -37,16 +37,17 @@ const ProjectStatus = React.forwardRef(function ProjectStatus({ props }, ref) {
                     button: false,
                     timer: 1000
                 }
-            )
-
-            setOpen(false)
-            dispatch(resetTask())
+            );
+            dispatch(fetchTasks(user.user_id));
+            dispatch(resetTask());
+            handleClose();
+            // dispatch(resetTask())
             // dispatch(fetchTasks(user.user_id))
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
         }
-    }, [projectStatus])
+    }, [projectStatus, dispatch, t, user.user_id]);
 
     return (
         <div>
