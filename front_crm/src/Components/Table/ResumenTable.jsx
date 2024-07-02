@@ -75,18 +75,18 @@ function Row(props){
             </TableRow>
 
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={'100%'}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 0, paddingLeft: 0 }} colSpan={'100%'}>
                     <Collapse in={true} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
+                        <Box >
                             <TableHead >
                                 <TableRow>
-                                    <TableCell  align="left">#</TableCell>
-                                    <TableCell  align="left">{t('task')}</TableCell>
-                                    <TableCell  align="left">{t('assignee')}</TableCell>
-                                    <TableCell  align="left">{t('start_date')}</TableCell>
-                                    <TableCell  align="left">{t('due_date')}</TableCell>
-                                    <TableCell  align="center">{t('progress')}</TableCell>
-                                    <TableCell  align="left">{t('status')}</TableCell>
+                                <TableCell style={{ paddingRight: 40}} sx={{ width: '5%' }}>#</TableCell>
+                                <TableCell sx={{ width: '25%' }}>{t('task')}</TableCell>
+                                <TableCell sx={{ width: '20%' }}>{t('assignee')}</TableCell>
+                                <TableCell align="center" sx={{ width: '20%' }}>{t('start_date')}</TableCell>
+                                <TableCell align="center" sx={{ width: '20%' }}>{t('due_date')}</TableCell>
+                                <TableCell align="center" sx={{ width: '5%' }}>{t('progress')}</TableCell>
+                                <TableCell align="center" sx={{ width: '5%' }}>{t('status')}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -136,19 +136,19 @@ function Row(props){
 
                                         </TableRow>
                                             <TableRow>
-                                                <TableCell style={{ paddingBottom: 0, paddingTop: 0, }} colSpan={'100%'}>
+                                                <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingRight: 0, paddingLeft: 0 }} colSpan={'100%'}>
                                                     <Collapse in={true} timeout="auto" unmountOnExit>
                                                         <Box sx={{ margin: 1 }}>
                                                             <Table size="small" aria-label="purchases" width={'100%'}>
                                                                 <TableHead>
                                                                     <TableRow>
-                                                                        <TableCell  align="left">#</TableCell>
-                                                                        <TableCell  align="left">{t('subtask')}</TableCell>
-                                                                        <TableCell  align="left" > {t('assignee')}</TableCell>
-                                                                        <TableCell  align="left">{t('start_date')}</TableCell>
-                                                                        <TableCell  align="left">{t('due_date')}</TableCell>
-                                                                        <TableCell  align="center">{t('progress')}</TableCell>
-                                                                        <TableCell  align="left">{t('status')}</TableCell>
+                                                                    <TableCell style={{ paddingRight: 40}} sx={{ width: '5%' }}>#</TableCell>
+                                                                    <TableCell sx={{ width: '25%' }}>{t('subtask')}</TableCell>
+                                                                    <TableCell align="left" sx={{ width: '20%' }}>{t('assignee')}</TableCell>
+                                                                    <TableCell align="center" sx={{ width: '20%' }}>{t('start_date')}</TableCell>
+                                                                    <TableCell align="center" sx={{ width: '20%' }}>{t('due_date')}</TableCell>
+                                                                    <TableCell align="center" sx={{ width: '5%' }}>{t('progress')}</TableCell>
+                                                                    <TableCell align="center" sx={{ width: '5%' }}>{t('status')}</TableCell>
                                                                     </TableRow>
                                                                 </TableHead>
                                                                 <TableBody>
@@ -267,13 +267,13 @@ export default function TaskTable() {
                       <Table aria-label="collapsible table" sx={{ maxHeight: '77vh' }}>
                         <TableHead >
                             <TableRow >
-                                <TableCell>#</TableCell>
-                                <TableCell style={style.tableHeading} >{t('Projects')}</TableCell>
-                                <TableCell style={style.tableHeading} align="left">{t('assignee')}</TableCell>
-                                <TableCell style={style.tableHeading} align="center" sx={{ width: '10rem' }}>{t('start_date')}</TableCell>
-                                <TableCell style={style.tableHeading} align="center" sx={{ width: '12rem' }}>{t('due_date')}</TableCell>
-                                <TableCell style={style.tableHeading} align="center" sx={{ width: '3rem' }}>{t('progress')}</TableCell>
-                                <TableCell style={style.tableHeading} align="center" sx={{ width: '3rem' }}>{t('status')}</TableCell>
+                                <TableCell sx={{ width: '5%' }}>#</TableCell>
+                                <TableCell style={style.tableHeading} sx={{ width: '25%' }}>{t('Projects')}</TableCell>
+                                <TableCell style={style.tableHeading} align="left" sx={{ width: '20%' }}>{t('assignee')}</TableCell>
+                                <TableCell style={style.tableHeading} align="center" sx={{ width: '20%' }}>{t('start_date')}</TableCell>
+                                <TableCell style={style.tableHeading} align="center" sx={{ width: '20%' }}>{t('due_date')}</TableCell>
+                                <TableCell style={style.tableHeading} align="center" sx={{ width: '5%' }}>{t('progress')}</TableCell>
+                                <TableCell style={style.tableHeading} align="center" sx={{ width: '5%' }}>{t('status')}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
