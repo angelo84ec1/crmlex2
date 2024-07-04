@@ -28,6 +28,7 @@ class ProjectController extends Controller
                 $query->with('subtasks');
             }])
             ->whereRaw('JSON_CONTAINS(project_assign_user_id, ?)', ['{"id": ' . $id . '}'])
+            // ->paginate(10);
             ->get();
 
             $response = [];
@@ -87,7 +88,8 @@ class ProjectController extends Controller
             $projects = Project::with(['tasks' => function ($query) {
                 $query->with('subtasks');
             }])
-             ->get();
+            // ->paginate(10);
+            ->get();
             $response = [];
             foreach ($projects as $project) {
                 $projectData = [
