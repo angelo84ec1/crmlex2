@@ -248,15 +248,14 @@ class ProjectController extends Controller
             if(count($update->assignUser) > 0){
                 foreach ($update->assignUser as $assign){
                     $email = $assign->assinBy->email;
-                    Mail::send('emails.projectMailTemplate',[
-                        'user' => $assign->assinBy->name,
-                        'description' => 'Your Project "'. $update->project_name . '" is Complete Successfully.',
-                    ], function ($message) use ($email, $assign) {
-                        $message->to($email)->subject('CRM Cliente Notification');
-                    });
+                    // Mail::send('emails.projectMailTemplate',[
+                    //     'user' => $assign->assinBy->name,
+                    //     'description' => 'Your Project "'. $update->project_name . '" is Complete Successfully.',
+                    // ], function ($message) use ($email, $assign) {
+                    //     $message->to($email)->subject('CRM Cliente Notification');
+                    // });
                 }
             }
-
         }
         return response()->json(['message' => 'Project Status Update successfully'],200);
 
