@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 // import NewGantt from './NewGantt'
 const NewGantt =lazy(()=>import('./NewGantt'))
 export default function Projects() {
+
   const [screen, setScreen] = React.useState(false)
   const { projectTasks } = useSelector(state => state.TaskReducer)
 

@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { Box, Typography } from '@mui/material'
 import Loader from '../Loader'
 export default function Sidebar() {
-
+    
     const dispatch = useDispatch()
     const location = useLocation()
     const { t } = useTranslation()

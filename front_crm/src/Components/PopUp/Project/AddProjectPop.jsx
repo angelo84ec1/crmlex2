@@ -82,9 +82,6 @@
 // })
 // export default AddProjectPop
 
-
-
-
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -98,6 +95,7 @@ import { useTranslation } from 'react-i18next';
 import { resetTask, addProject, fetchTasks } from '../../../Redux/taskReducer';
 
 const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
+    console.log('Add project page: ' + props);
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
     const { projectStatus } = useSelector(state => state.TaskReducer);
@@ -122,11 +120,12 @@ const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
                 timer: 1000
             });
 
-            dispatch(fetchTasks(user.user_id));
+            // dispatch(fetchTasks(user.user_id));
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             dispatch(resetTask());
             handleClose();
         }
-    }, [projectStatus, dispatch, t, user.user_id]);
+    }, [projectStatus, dispatch, t, user.user_id, props]);
 
     return (
         <div>

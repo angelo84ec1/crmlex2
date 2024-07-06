@@ -6,16 +6,13 @@ export const fetchTasks = createAsyncThunk(
   'fetchTasks',
   async (params, thunkAPI) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_REACT_API_URL}/api/projects/${params}`);
-      console.log("Response: "+response.data);
+      const response = await axios.get(`${import.meta.env.VITE_REACT_API_URL}/api/projects/${params.user_id}?page=${params.page + 1}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
-
-
 // ------------------------------------------------------ADD NEW TASK-------------------------------
 
 export const fetchProjectTasks = createAsyncThunk(

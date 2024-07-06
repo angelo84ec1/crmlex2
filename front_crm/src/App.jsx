@@ -41,7 +41,7 @@ function App() {
       dispatch(getUser())
       dispatch(fetchProjectTasks(user.user_id))
       dispatch(fetchDashboard(user.user_id))
-      dispatch(fetchTasks(user.user_id))
+      // dispatch(fetchTasks(user.user_id))
       dispatch(getSchedule(user.user_id))
       dispatch(fetchNotifications(user.user_id))
       dispatch(fetchGanttChart(user.user_id))
@@ -66,7 +66,7 @@ function App() {
             <Router>
               <Routes>
 
-                <Route  path='/*' element={<Sidebar />} />
+                <Route path='/*' element={<Sidebar />} />
                 <Route index path='login' element={<Login />} />
                 <Route path='signUp' element={<SignUp />} />
                 <Route path='forgetPassword' element={<ForgetPassword />} />
