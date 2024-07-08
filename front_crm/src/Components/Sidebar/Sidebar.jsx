@@ -139,7 +139,7 @@ export default function Sidebar() {
                             </li>
                         </ul>
                         <ul className=" mt-5">
-                            <li className="sidebar-logout"
+                            <li className="sidebar-logout" style={{ cursor:'pointer'}}
 
                                 onClick={() => {
                                     dispatch(resetDashboard())
@@ -149,7 +149,7 @@ export default function Sidebar() {
                                 }
                             >
                                 <i className='logouts-icons bx bx-log-out-circle' style={{ color: `${!sidebarOpen ? 'red' : 'white'}` }}></i>
-                                <span className="logouts">Logout</span>
+                                <span className="logouts" style={{ opacity: 1, marginTop: -8}}>Logout</span>
 
                             </li>
                         </ul>

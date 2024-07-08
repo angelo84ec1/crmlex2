@@ -95,7 +95,6 @@ import { useTranslation } from 'react-i18next';
 import { resetTask, addProject, fetchTasks } from '../../../Redux/taskReducer';
 
 const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
-    console.log('Add project page: ' + props);
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
     const { projectStatus } = useSelector(state => state.TaskReducer);

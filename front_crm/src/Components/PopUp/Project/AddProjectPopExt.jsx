@@ -102,7 +102,7 @@ import { resetTask, fetchTasks, addProject } from '../../../Redux/taskReducer';
 const AddProjectPopExt = React.forwardRef(function AddProjectPop({ props }, ref) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
-    const { taskStatus } = useSelector(state => state.tasks); // Ensure the reducer name matches
+   const { status, taskStatus } = useSelector(state => state.TaskReducer)
     const { user } = useSelector(state => state.Auth);
     const { t } = useTranslation();
 

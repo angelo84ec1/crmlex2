@@ -32,7 +32,7 @@ export default function Projects() {
                 {/* <a href="" className="active">
                   <li><i className='bx bx-table pe-1'></i>Table</li>
                 </a> */}
-                <Button variant={!screen ? 'contained' : 'outlined'} onClick={tableScreen}>
+                <Button variant={!screen ? 'contained' : 'outlined'} style={{marginRight: 10}} onClick={tableScreen}>
                   {t('table')}
                 </Button>
 
