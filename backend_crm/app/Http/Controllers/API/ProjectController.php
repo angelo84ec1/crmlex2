@@ -313,7 +313,7 @@ class ProjectController extends Controller
                 ->with('tasks.taskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName')
-                ->paginate(2);
+                ->paginate(5);
         }
         return response()->json(['projects' => $projects], 200);
     }
