@@ -66,7 +66,7 @@ function createData(
 
 function Row(props) {
   console.log(props, "props props propsprops props props propsprops props");
-  const { row } = props;
+  const { row, page } = props;
   const [open, setOpen] = React.useState(false);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -209,7 +209,7 @@ function Row(props) {
         </TableCell>
 
         {/* =----------------------REFFERENCE COMPONENTS------------------------- */}
-        <EditProjectPop ref={editTaskRef} />
+        <EditProjectPop ref={editTaskRef} props={page} />
         <DeleteProject ref={deleteTaskRef} />
         <ProjectStatus ref={taskStatus} />
       </TableRow>
@@ -228,107 +228,6 @@ function Row(props) {
   );
 }
 
-// export default function CollapsibleTable() {
-//   // console.log('Collapse Function: ');
-//   const { t } = useTranslation()
-//   const ref = React.useRef(null)
-//   const dispatch = useDispatch()
-//   const { tasks, projectTasks } = useSelector(state => state.TaskReducer)
-//   const { user } = useSelector(state => state.Auth)
-//   const [rows, setRows] = React.useState([]);
-//   const [totalRecord, setTotalRecord] = React.useState([]);
-//   const [page, setPage] = useState(1); // Page state starts from 0 for TablePagination
-//   const [rowsPerPage, setRowsPerPage] = React.useState(2);
-
-//   const addTask = () => {
-//     ref.current.click()
-//   }
-
-//   const handleChangePage = (event, newPage) => {
-//     console.log('new Page: ' + newPage);
-//     setPage(newPage);
-// };
-
-// // const handleChangeRowsPerPage = (event) => {
-// //     setRowsPerPage(+event.target.value);
-// //     // setPage(1);
-// // };
-
-//  useEffect(() => {
-//     if (tasks && tasks.data && Array.isArray(tasks.data)) {
-//       const formattedRows = tasks.data.map(item =>
-//         createData(
-//           item.project_name,
-//           item.assign_user,
-//           item.project_status,
-//           item.project_startdate,
-//           item.project_enddate,
-//           item.tasks,
-//           item.id,
-//           item.project_description,
-//           item.progress
-//         )
-//       );
-//       setRows(formattedRows);
-//       setTotalRecord(tasks.total);
-//     }
-//     dispatch(fetchTasks({user_id: user.user_id, page: page}));
-//   }, [tasks]);
-//   console.log(page);
-//   console.log(page);
-
-//   return (
-//     <TableContainer className='table-style'>
-//       {/* ----------------------PARENT TABLE ROWS----------------------------------------- */}
-//       <Table aria-label="collapsible table" sx={{ maxHeight: '77vh' }}>
-//         <TableHead>
-//           <TableRow>
-//             <TableCell />
-//             <TableCell style={style.tableHeading} >{t('Projects')}</TableCell>
-//             <TableCell style={style.tableHeading} align="left">{t('assignee')}</TableCell>
-//             <TableCell style={style.tableHeading} align="center" sx={{ width: '3rem' }}>{t('status')}</TableCell>
-//             <TableCell style={style.tableHeading} align="center" sx={{ width: '10rem' }}>{t('start_date')}</TableCell>
-//             <TableCell style={style.tableHeading} align="center" sx={{ width: '12rem' }}>{t('due_date')}</TableCell>
-//             <TableCell style={style.tableHeading} align="center">
-//               <IconButton
-//                 sx={{
-//                   ...style.iconButton,
-//                   display: user.role === 'Cliente' || user.role === 'Assistant' ? 'none' : '',
-//                 }}
-//                 onClick={() => {
-//                   addTask()
-//                 }}>
-//                 <AddIcon />
-//               </IconButton>
-//             </TableCell>
-//           </TableRow>
-//         </TableHead>
-//         <TableBody>
-//           {rows.map((row) => (
-//             <Row key={row.id} row={row} />
-//           ))}
-//         </TableBody>
-//       </Table>
-//       <TablePagination
-//                     rowsPerPageOptions={[2, 10, 20]}
-//                     component="div"
-//                     count={totalRecord}
-//                     rowsPerPage={rowsPerPage}
-//                     page={page}
-//                     // sx={{ display: `${search.length < 1 ? 'none' : "block"}` }}
-//                     onPageChange={handleChangePage}
-//                     // onRowsPerPageChange={handleChangeRowsPerPage}
-//                 />
-//       <Box sx={{ width: '100%', mt: '10rem', display: `${!projectTasks.length < 1 && 'none'}` }}>
-//         <Typography color={'primary'} align='center' >
-//           {t('empty')}
-//         </Typography>
-//       </Box>
-//       <AddProjectPop ref={ref} />
-//     </TableContainer>
-//   );
-// }
-
 export default function CollapsibleTable() {
   const { t } = useTranslation();
   const ref = React.useRef(null);
@@ -338,7 +237,7 @@ export default function CollapsibleTable() {
   const [rows, setRows] = React.useState([]);
   const [totalRecord, setTotalRecord] = React.useState(0); // Initialize totalRecord
   const [page, setPage] = React.useState(0); // Page state starts from 0 for TablePagination
-  const rowsPerPage = 2;
+  const rowsPerPage = 5;
 
   const addTask = () => {
     ref.current.click();
@@ -427,14 +326,14 @@ export default function CollapsibleTable() {
         {/* Table Body */}
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.id} row={row} />
+            <Row key={row.id} row={row} page={page} />
           ))}
         </TableBody>
       </Table>
 
       {/* Pagination Component */}
       <TablePagination
-        rowsPerPageOptions={[2, 10, 20]}
+        rowsPerPageOptions={[5]}
         component="div"
         count={totalRecord}
         rowsPerPage={rowsPerPage}

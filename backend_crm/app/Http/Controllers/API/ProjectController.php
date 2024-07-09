@@ -307,7 +307,7 @@ class ProjectController extends Controller
                 ->whereHas('assignUser', function ($query) use ($id) {
                     $query->where('assign_user_id', $id);
                 })
-                ->paginate(2);
+                ->paginate(5);
         } else {
             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
                 ->with('tasks.taskName.assignUser.assinBy')

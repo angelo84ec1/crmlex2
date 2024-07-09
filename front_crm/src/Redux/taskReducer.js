@@ -583,28 +583,27 @@ export const taskSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(editTask.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.editNewProject = action.payload;
-        console.log("After *********", action.payload);
-        let previous = state.tasks.filter((task) => task.id === action.payload?.project?.id);
-        state.tasks = state.tasks.map((task) => {
-          if(task.id === action.payload?.project?.id){
-            let updatedProject = {
-              ...previous[0],
-              project_name: action.payload?.project?.project_name,
-              project_description: action.payload?.project?.project_description,
-              project_status: action.payload?.project?.project_status,
-              project_startdate: action.payload?.project?.project_startdate,
-              project_enddate: action.payload?.project?.project_enddate,
-              progress: action.payload?.project?.progress,
-            };
-            console.log("Updated Project", updatedProject);
-            console.log("previous", previous[0])
-            return updatedProject;
-          }
-          return task;
-        }
-        );
+          state.status = 'succeeded';
+          state.editNewProject = action.payload;
+          console.log("After *********", action.payload);
+          // let previous = state.tasks.filter((task) => task.id === action.payload?.project?.id);
+          // state.tasks = state.tasks.map((task) => {
+          //   if(task.id === action.payload?.project?.id){
+          //     let updatedProject = {
+          //       ...previous[0],
+          //       project_name: action.payload?.project?.project_name,
+          //       project_description: action.payload?.project?.project_description,
+          //       project_status: action.payload?.project?.project_status,
+          //       project_startdate: action.payload?.project?.project_startdate,
+          //       project_enddate: action.payload?.project?.project_enddate,
+          //       progress: action.payload?.project?.progress,
+          //     };
+          //     console.log("Updated Project", updatedProject);
+          //     console.log("previous", previous[0])
+          //     return updatedProject;
+          //   }
+          //   return task;
+          // });
         state.status = 'idle'
       })
       .addCase(editTask.rejected, (state, action) => {
