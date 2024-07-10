@@ -27,8 +27,8 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
     const { t } = useTranslation()
 
     React.useEffect(() => {
-        console.log(">>>>>> Add Task Pop"+ taskStatus)
         if (taskStatus.message) {
+            handleClose();
             swal(
                 {
                     title: `Exito`,
@@ -38,13 +38,12 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
                     timer: 2000
                 }
             )
-            // dispatch(fetchTasks(user.user_id))
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
-            dispatch(fetchProjectTasks())
-            dispatch(resetTask())
-            handleClose()
+            // dispatch(fetchProjectTasks())
+            // dispatch(resetTask())
         }
     }, [taskStatus])
 

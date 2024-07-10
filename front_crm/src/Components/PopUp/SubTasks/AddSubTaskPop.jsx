@@ -29,6 +29,7 @@ const AddSubTaskPop = React.forwardRef(function AddSubTaskPop({ props }, ref) {
 
     React.useEffect(() => {
         if (taskStatus.message) {
+            handleClose();
             swal(
                 {
                     title: `${t('success')}`,
@@ -38,13 +39,12 @@ const AddSubTaskPop = React.forwardRef(function AddSubTaskPop({ props }, ref) {
                     timer: 3000
                 }
             )
-            // dispatch(fetchTasks(user.user_id))
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
-            dispatch(fetchProjectTasks())
-            dispatch(resetTask())
-            setOpen(false)
+            // dispatch(fetchProjectTasks())
+            // dispatch(resetTask())
         }
     }, [taskStatus])
 

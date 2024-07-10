@@ -131,6 +131,7 @@ const DeleteProject = React.forwardRef(function AddTaskPop({ props }, ref) {
 
     React.useEffect(() => {
         if (delTaskStatus.message) {
+            handleClose();
             dispatch(deleteProject({ id: currentTask.id }));
 
             swal({
@@ -141,14 +142,13 @@ const DeleteProject = React.forwardRef(function AddTaskPop({ props }, ref) {
                 timer: 1000,
             });
 
-            dispatch(fetchTasks(user.user_id));
-            dispatch(getSchedule(user.user_id));
-            dispatch(fetchDashboard(user.user_id));
-            dispatch(fetchGanttChart(user.user_id));
-            dispatch(resetTask());
-            setOpen(false);
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
+            // dispatch(getSchedule(user.user_id));
+            // dispatch(fetchDashboard(user.user_id));
+            // dispatch(fetchGanttChart(user.user_id));
+            // dispatch(resetTask());
         }
-    }, [delTaskStatus, dispatch, currentTask.id, t, user.user_id]);
+    }, [delTaskStatus]);
 
     return (
         <div>

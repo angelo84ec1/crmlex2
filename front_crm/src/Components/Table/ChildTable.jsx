@@ -41,7 +41,7 @@ function createData(item) {
 
 
 function Row(props) {
-  const { row, setCurrentRow } = props;
+  const { row, setCurrentRow, page } = props;
   const [open, setOpen] = React.useState(false);
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -51,8 +51,6 @@ function Row(props) {
   const addSubTask = () => {
     refSub.current.click()
   }
-
-  
 
   // --------------------------------------------------------EDIT TASK REF-------------------------------------
   const editTaskRef = React.useRef(null)
@@ -186,14 +184,14 @@ function Row(props) {
           </IconButton>
         </TableCell>
         {/* =----------------------REFFERENCE COMPONENTS------------------------- */}
-        <EditTaskPop ref={editTaskRef} />
-        <DeleteTaskPop ref={deleteTaskRef} />
-        <TaskStatus ref={taskStatus} />
-        <EditSubTaskPop ref={editSubTaskRef} />
-        <DeleteSubTaskPop ref={deleteSubTaskRef} />
-        <SubTaskStatus ref={subtaskStatus} />
-        <AddEmailPopUp ref={emailPopUp} />
-        <AddTaskEmailPopUp ref={taskemailPopUp} />
+        <EditTaskPop ref={editTaskRef} props={page} />
+        <DeleteTaskPop ref={deleteTaskRef} props={page} />
+        <TaskStatus ref={taskStatus} props={page} />
+        <EditSubTaskPop ref={editSubTaskRef} props={page} />
+        <DeleteSubTaskPop ref={deleteSubTaskRef} props={page} />
+        <SubTaskStatus ref={subtaskStatus} props={page} />
+        <AddEmailPopUp ref={emailPopUp} props={page} />
+        <AddTaskEmailPopUp ref={taskemailPopUp} props={page} />
       </TableRow>
 
 
@@ -330,7 +328,8 @@ function Row(props) {
 
 
 
-export default function ChildTable({ tasks }) {
+export default function ChildTable({ tasks, props }) {
+  // console.log('Child Table Props: ' + props);
   const { t } = useTranslation()
   const ref = React.useRef(null)
   const { currentProject } = useSelector(state => state.TaskReducer)
@@ -382,7 +381,7 @@ export default function ChildTable({ tasks }) {
         </TableHead>
         <TableBody >
           {rows && rows.map((row) => {
-            return <Row key={row.name} row={row} setCurrentRow={setCurrentRow} />;
+            return <Row key={row.name} row={row} setCurrentRow={setCurrentRow} page={props} />;
           })}
         </TableBody>
       </Table>

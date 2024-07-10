@@ -65,7 +65,6 @@ function createData(
 }
 
 function Row(props) {
-  console.log(props, "props props propsprops props props propsprops props");
   const { row, page } = props;
   const [open, setOpen] = React.useState(false);
   const { t } = useTranslation();
@@ -211,7 +210,7 @@ function Row(props) {
         {/* =----------------------REFFERENCE COMPONENTS------------------------- */}
         <EditProjectPop ref={editTaskRef} props={page} />
         <DeleteProject ref={deleteTaskRef} />
-        <ProjectStatus ref={taskStatus} />
+        <ProjectStatus ref={taskStatus} props={page} />
       </TableRow>
 
       {/* -----------------------SUB TABLE HEADER---------------------------------------- */}
@@ -219,7 +218,7 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <ChildTable tasks={row?.tasks} />
+              <ChildTable tasks={row?.tasks} props={page} />
             </Box>
           </Collapse>
         </TableCell>
@@ -255,7 +254,6 @@ export default function CollapsibleTable() {
   useEffect(() => {
     // Update rows and totalRecord when tasks data changes
     if (tasks && tasks.data && Array.isArray(tasks.data)) {
-      // console.log('After Function Calling');
       const formattedRows = tasks.data.map((item) =>
         createData(
           item.project_name,

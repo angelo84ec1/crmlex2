@@ -31,6 +31,7 @@ const EditProjectPop = React.forwardRef(function EditProjectPop({ props }, ref) 
 
     React.useEffect(() => {
         if (editNewProject.message) {
+            handleClose();
             swal(
                 {
                     title: `${t('success')}`,
@@ -41,13 +42,12 @@ const EditProjectPop = React.forwardRef(function EditProjectPop({ props }, ref) 
                 }
             )
 
-            dispatch(resetTask())
+            // dispatch(resetTask())
             dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(fetchTasks(user.user_id))
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
-            setOpen(false)
         }
     }, [editNewProject])
 

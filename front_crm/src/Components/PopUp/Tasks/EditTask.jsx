@@ -31,6 +31,7 @@ const EditTask = React.forwardRef(function EditTaskPop({ props }, ref) {
     React.useEffect(() => {
 
         if (editNewTask.message) {
+            handleClose();
             swal(
                 {
                     title: `${t('success')}`,
@@ -40,13 +41,13 @@ const EditTask = React.forwardRef(function EditTaskPop({ props }, ref) {
                     timer: 1000
                 }
             )
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(fetchTasks(user.user_id))
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
             // dispatch(fetchProjectTasks())
-            dispatch(resetTask())
-            setOpen(false)
+            // dispatch(resetTask())
         }
     }, [editNewTask])
 

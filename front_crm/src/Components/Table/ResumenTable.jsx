@@ -20,7 +20,7 @@ import TaskMultiSelect from "../UseAble/TaskMultiSelect.jsx";
 import ModeEditIcon from "@mui/icons-material/ModeEdit.js";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline.js";
 import TablePagination from "@mui/material/TablePagination";
-import {setCurrentProject, setCurrentTask} from "../../Redux/taskReducer.js";
+import {setCurrentProject, setCurrentTask, fetchTasks} from "../../Redux/taskReducer.js";
 import EditTask from "../PopUp/Tasks/EditTask.jsx";
 import DeleteTask from "../PopUp/Tasks/DeleteTask.jsx";
 import AddSubTaskPop from "../PopUp/SubTasks/AddSubTaskPop.jsx";
@@ -34,7 +34,7 @@ import SubTaskStatus from "../PopUp/SubTasks/SubTaskStatus.jsx";
 import SubTaskMultiSelect from "../UseAble/SubTaskMultiSelect.jsx";
 import MailOutlinedIcon from "@mui/icons-material/MailOutlined.js";
 import AddTaskEmailPopUp from "../PopUp/Tasks/Task Email/AddTaskEmailPopUp.jsx";
-
+import { useEffect } from "react";
 
 function Row(props){
     const { row } = props;
@@ -207,11 +207,13 @@ function Row(props){
 }
 
 export default function TaskTable() {
+    const dispatch = useDispatch()
     const [page, setPage] = React.useState(0);
     const { projectTasks } = useSelector(state => state.TaskReducer)
     const { tasks } = useSelector(state => state.TaskReducer)
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [search,] = React.useState(projectTasks)
+    const [rows, setRows] = React.useState([]);
     const { t } = useTranslation()
     const contentRef = React.useRef('')
     const ref = React.useRef(null)
@@ -222,9 +224,19 @@ export default function TaskTable() {
         return { project_name, assign_user, project_status, project_startdate, project_enddate, tasks, id, project_description, progress };
     }
 
-    const rows = tasks.map((item) => {
-        return createData(item.project_name, item.assign_user, item.project_status, item.project_startdate, item.project_enddate, item.tasks, item.id, item.project_description, item.progress, item.tasks)
-    })
+    useEffect(() => {
+        // Fetch tasks when page changes or component mounts
+       dispatch(fetchTasks({ user_id: user.user_id, page: 0 }));
+      }, [dispatch]);
+
+    useEffect(() => {
+        if(tasks.data) {
+            let rowArr = tasks.data.map((item) => {
+                return createData(item.project_name, item.assign_user, item.project_status, item.project_startdate, item.project_enddate, item.tasks, item.id, item.project_description, item.progress, item.tasks)
+            });
+            setRows(rowArr);
+        }
+    }, [tasks]);
 
     const handleDownloadPDF = () => {
         const element = contentRef.current;
@@ -253,6 +265,9 @@ export default function TaskTable() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+
+    
+
     return (
         <React.Fragment>
 

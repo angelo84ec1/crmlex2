@@ -14,7 +14,7 @@ import {fetchDashboard, fetchGanttChart} from "../../../Redux/dashboardReducer.j
 const EditTaskPop = React.forwardRef(function EditTaskPop({ props }, ref) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch()
-    const { editNewSubTask,currentTask } = useSelector(state => state.TaskReducer)
+    const { editNewSubTask, currentTask } = useSelector(state => state.TaskReducer)
     const { user } = useSelector(state => state.Auth)
     const handleClickOpen = () => {
         setOpen(true);
@@ -28,6 +28,7 @@ const EditTaskPop = React.forwardRef(function EditTaskPop({ props }, ref) {
     React.useEffect(() => {
         // console.log(editStatus)
         if (editNewSubTask.message) {
+            handleClose();
             swal(
                 {
                     title: `${t('success')}`,
@@ -37,13 +38,12 @@ const EditTaskPop = React.forwardRef(function EditTaskPop({ props }, ref) {
                     timer: 2000
                 }
             )
-            // dispatch(fetchTasks(user.user_id))
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
             // // dispatch(fetchProjectTasks())
-            dispatch(resetTask())
-            setOpen(false)
+            // dispatch(resetTask())
         }
     }, [editNewSubTask])
 

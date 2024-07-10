@@ -29,6 +29,7 @@ const ProjectStatus = React.forwardRef(function ProjectStatus({ props }, ref) {
     React.useEffect(() => {
         console.log(projectStatus.message)
         if (projectStatus.message) {
+            handleClose();
             swal(
                 {
                     title: `${t('success')}`,
@@ -38,16 +39,16 @@ const ProjectStatus = React.forwardRef(function ProjectStatus({ props }, ref) {
                     timer: 1000
                 }
             );
-            dispatch(fetchTasks(user.user_id));
-            dispatch(resetTask());
-            handleClose();
+            // dispatch(fetchTasks(user.user_id));
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
+            // dispatch(resetTask());
             // dispatch(resetTask())
             // dispatch(fetchTasks(user.user_id))
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
         }
-    }, [projectStatus, dispatch, t, user.user_id]);
+    }, [projectStatus]);
 
     return (
         <div>

@@ -14,6 +14,7 @@ import { Box } from '@mui/material';
 import {getSchedule} from "../../../Redux/userReducer.js";
 import {fetchDashboard, fetchGanttChart} from "../../../Redux/dashboardReducer.js";
 const SubTaskStatus = React.forwardRef(function SubTaskStatus({ props }, ref) {
+    
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch()
     const { editsubtaskstatus } = useSelector(state => state.TaskReducer)
@@ -29,6 +30,7 @@ const SubTaskStatus = React.forwardRef(function SubTaskStatus({ props }, ref) {
 
     React.useEffect(() => {
         if (editsubtaskstatus.message) {
+            handleClose();
             swal(
                 {
                     title: `${t('success')}`,
@@ -38,13 +40,12 @@ const SubTaskStatus = React.forwardRef(function SubTaskStatus({ props }, ref) {
                     timer: 2000
                 }
             )
-            // dispatch(fetchTasks(user.user_id))
+            dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
-            dispatch(fetchProjectTasks())
-            dispatch(resetTask())
-            setOpen(false)
+            // dispatch(fetchProjectTasks())
+            // dispatch(resetTask())
         }
     }, [editsubtaskstatus])
 

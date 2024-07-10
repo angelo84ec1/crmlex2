@@ -111,6 +111,7 @@ const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
 
     React.useEffect(() => {
         if (projectStatus.message) {
+            handleClose();
             swal({
                 title: `${t("success")}`,
                 text: `${t("project_added")}`,
@@ -121,10 +122,9 @@ const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
 
             // dispatch(fetchTasks(user.user_id));
             dispatch(fetchTasks({ user_id: user.user_id, page: props }));
-            dispatch(resetTask());
-            handleClose();
+            // dispatch(resetTask());
         }
-    }, [projectStatus, dispatch, t, user.user_id, props]);
+    }, [projectStatus]);
 
     return (
         <div>
