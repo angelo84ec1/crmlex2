@@ -45,6 +45,7 @@ export default function EditProjectForm() {
         // console.log(formattedDate); // output: "2023 /5/ 10 15:1"
         return formattedDate
     }
+    
     const handleSelectionChange = (event, value) => {
         const selectedIds = value.map((item) => item.id);
         const uniqueIds = [...new Set(selectedIds)]; // Remove duplicate IDs
@@ -52,6 +53,7 @@ export default function EditProjectForm() {
         selectedCustomerIds.current = uniqueIds;
         setValue("customer", value);
     };
+
     const isCustomerSelected = (id) => selectedCustomerIds.current.includes(id);
     const { handleSubmit, control, formState: { errors }, register } = useForm({
         resolver: yupResolver(schema),

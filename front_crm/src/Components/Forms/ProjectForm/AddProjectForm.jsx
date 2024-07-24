@@ -82,10 +82,10 @@ export default function AddProjectForm() {
     const setDate = (input) => {
         const date = new Date(input);
         const formattedDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+        console.log('formattedDate: '+formattedDate)
         return formattedDate
 
     }
-    // console.log(customers)
 
 
     //LOGIN USER USING AUTH CONTEXT

@@ -178,7 +178,7 @@ class ProjectController extends Controller
             'project_startdate' => $request->project_startdate,
             'project_enddate' => $request->project_enddate,
             'project_description' => $request->project_description,
-            'progress' => 0,
+            'progress' => 5,
             'user_id' => $request->user_id,
         ];
         $insert = Project::create($project);
