@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $user = User::find($user_id);
         $id = $user_id;
 
-        if ($user->role == 'Cliente' or  $user->role == 'Digitador' or  $user->role == 'Assistant' or  $user->role == 'Supervisor' or  $user->role == 'Administrador') {
+        if ($user->role == 'Cliente' or  $user->role == 'Digitador' or  $user->role == 'Assistant' or  $user->role == 'Supervisor') {
             $totalProjects = Project::with('tasks.taskName', 'assignUser.assinBy')
                 ->whereHas('assignUser', function ($query) use ($id) {
                     $query->where('assign_user_id', $id);

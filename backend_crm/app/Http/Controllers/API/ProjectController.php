@@ -307,12 +307,14 @@ class ProjectController extends Controller
                 ->whereHas('assignUser', function ($query) use ($id) {
                     $query->where('assign_user_id', $id);
                 })
+                ->orderBy('id', 'DESC')
                 ->paginate(5);
         } else {
             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
                 ->with('tasks.taskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName')
+                ->orderBy('id', 'DESC')
                 ->paginate(5);
         }
         return response()->json(['projects' => $projects], 200);

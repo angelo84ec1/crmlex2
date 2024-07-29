@@ -40,12 +40,12 @@ function App() {
       dispatch(fetchCustomers((user.user_id)))
       dispatch(getUser())
       dispatch(fetchProjectTasks(user.user_id))
-      // dispatch(fetchDashboard(user.user_id))
+      dispatch(fetchDashboard(user.user_id))
       // dispatch(fetchTasks(user.user_id))
       // dispatch(fetchTasks({ user_id: user.user_id, page: 0 }));
       dispatch(getSchedule(user.user_id))
       dispatch(fetchNotifications(user.user_id))
-      // dispatch(fetchGanttChart(user.user_id))
+      dispatch(fetchGanttChart(user.user_id))
     }
 
   }, [isAuthenticated])
