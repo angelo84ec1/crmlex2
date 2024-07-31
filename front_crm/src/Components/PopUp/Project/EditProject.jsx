@@ -47,7 +47,7 @@ const EditProjectPop = React.forwardRef(function EditProjectPop({ props }, ref) 
             // dispatch(fetchTasks(user.user_id))
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
-            // dispatch(fetchGanttChart(user.user_id))
+            dispatch(fetchGanttChart(user.user_id))
         }
     }, [editNewProject])
 

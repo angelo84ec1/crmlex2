@@ -93,6 +93,7 @@ import swal from 'sweetalert';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { resetTask, addProject, fetchTasks } from '../../../Redux/taskReducer';
+import {fetchDashboard, fetchGanttChart} from "../../../Redux/dashboardReducer.js";
 
 const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
     const [open, setOpen] = React.useState(false);
@@ -123,6 +124,7 @@ const AddProjectPop = React.forwardRef(function AddProjectPop({ props }, ref) {
             // dispatch(fetchTasks(user.user_id));
             dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(resetTask());
+            dispatch(fetchGanttChart(user.user_id))
         }
     }, [projectStatus]);
 

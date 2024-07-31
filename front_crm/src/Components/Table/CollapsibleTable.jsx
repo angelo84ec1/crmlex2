@@ -273,7 +273,7 @@ export default function CollapsibleTable() {
   }, [tasks]);
 
   return (
-    <TableContainer className="table-style">
+    <TableContainer className="rounded-lg border border-gray-300 overflow-scroll">
       {/* Table Headers and Body */}
       <Table aria-label="collapsible table" sx={{ maxHeight: "77vh" }}>
         {/* Table Headers */}

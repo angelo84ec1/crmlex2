@@ -94,7 +94,7 @@ export default function AddProjectForm() {
         const givenDate = new Date(setDate(data.startDate));
         const oneYearAfter = new Date(givenDate.getFullYear() + 1, givenDate.getMonth(), givenDate.getDate());
         // console.log({ ...data, user_id: user.user_id, startDate: setDate(data.startDate), endDate: data.dueDate === null ? setDate(oneYearAfter) : setDate(data.dueDate), project_status: 'pending' })
-        dispatch(addProject({ ...data, user_id: user.user_id, startDate: setDate(data.startDate), endDate: data.dueDate === null ? setDate(oneYearAfter) : setDate(data.dueDate), project_status: 'pending' }))
+        dispatch(addProject({ ...data, user_id: user.user_id, startDate: setDate(data.startDate), endDate: data.dueDate === null ? setDate(oneYearAfter) : setDate(data.dueDate), project_status: 'new' }))
         // setNewTask({ ...data, user_id: user.user_id, startDate: setDate(data.startDate), endDate: data.dueDate === null ? setDate(oneYearAfter) : setDate(data.dueDate), project_status: 'pending' })
           console.log(data,'datadatadatadata');
     }

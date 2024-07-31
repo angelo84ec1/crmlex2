@@ -145,7 +145,7 @@ const DeleteProject = React.forwardRef(function AddTaskPop({ props }, ref) {
             dispatch(fetchTasks({ user_id: user.user_id, page: props }));
             // dispatch(getSchedule(user.user_id));
             // dispatch(fetchDashboard(user.user_id));
-            // dispatch(fetchGanttChart(user.user_id));
+            dispatch(fetchGanttChart(user.user_id));
             // dispatch(resetTask());
         }
     }, [delTaskStatus]);

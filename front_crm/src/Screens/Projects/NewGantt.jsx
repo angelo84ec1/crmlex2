@@ -60,12 +60,12 @@ const NewGantt = () => {
 
 	return (
 		<React.Fragment>
-			<Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around',alignItems:'center' }}>
+			<Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-around',alignItems:'center'}}>
 
 				{status.map((color) => {
 					return <Box key={color.backgroundColor} sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
 
-						<Box sx={{ width: '5rem', height: '1rem', backgroundColor: `${color.backgroundColor}`,borderRadius:'3px' }}>
+						<Box sx={{ width: '5rem', height: '1rem', backgroundColor: `${color.backgroundColor}`,borderRadius:'3px', marginRight: '10px' }}>
 						</Box>
 						<Typography>{color.label}</Typography>
 					</Box>

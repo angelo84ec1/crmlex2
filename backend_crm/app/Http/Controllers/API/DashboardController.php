@@ -284,7 +284,9 @@ class DashboardController extends Controller
             $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')
                 ->whereHas('assignUser', function ($quary) use ($user) {
                     $quary->where('assign_user_id', $user->id);
-                })->get();
+                })
+                ->orderBy('id', 'DESC')
+                ->get();
             // Prepare the JSON response
             $data = [];
             foreach ($projects as $project) {
@@ -372,7 +374,7 @@ class DashboardController extends Controller
             }
         } else {
             // Retrieve projects based on the user_id
-            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')->get();
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')->orderBy('id', 'DESC')->get();
             // Prepare the JSON response
             $data = [];
             foreach ($projects as $project) {

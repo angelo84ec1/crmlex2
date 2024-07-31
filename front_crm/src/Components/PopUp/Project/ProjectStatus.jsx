@@ -46,7 +46,7 @@ const ProjectStatus = React.forwardRef(function ProjectStatus({ props }, ref) {
             // dispatch(fetchTasks(user.user_id))
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
-            // dispatch(fetchGanttChart(user.user_id))
+            dispatch(fetchGanttChart(user.user_id))
         }
     }, [projectStatus]);
 

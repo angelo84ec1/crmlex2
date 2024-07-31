@@ -190,7 +190,7 @@ export const addProject = createAsyncThunk(
         {
           project_name: params.title,
           project_assign_user_id: params.customer,
-          project_status: "pending",
+          project_status: "new",
           project_startdate: params.startDate,
           project_enddate: params.endDate,
           task: params.task,
