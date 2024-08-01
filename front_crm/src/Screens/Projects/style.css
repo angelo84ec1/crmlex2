@@ -1,3 +1,6 @@
+div[style*="color: rgb(86, 86, 86);"][style*="font-size: 0.6rem;"][style*="padding: 0.15rem 0.2rem 0rem;"][style*="user-select: none;"][style*="cursor: pointer;"] {
+    display: none !important;
+}
 .css-14pueg6 {
     padding: 16px;
     background-color: white;

@@ -37,7 +37,7 @@ import ProjectStatus from "../PopUp/Project/ProjectStatus";
 import AddProjectPop from "../PopUp/Project/AddProjectPop";
 import DeleteProject from "../PopUp/Project/DeleteProject";
 import { setCurrentProject, fetchTasks } from "../../Redux/taskReducer";
-
+import Loader from "../Loader";
 import { useEffect } from "react";
 
 function createData(
@@ -236,6 +236,7 @@ export default function CollapsibleTable() {
   const [rows, setRows] = React.useState([]);
   const [totalRecord, setTotalRecord] = React.useState(0); // Initialize totalRecord
   const [page, setPage] = React.useState(0); // Page state starts from 0 for TablePagination
+  const [loading, setLoading] = React.useState(true);
   const rowsPerPage = 5;
 
   const addTask = () => {
@@ -247,6 +248,7 @@ export default function CollapsibleTable() {
   };
 
   useEffect(() => {
+    setLoading(true);
     // Fetch tasks when page changes or component mounts
     dispatch(fetchTasks({ user_id: user.user_id, page: page }));
   }, [dispatch, user.user_id, page]);
@@ -269,12 +271,16 @@ export default function CollapsibleTable() {
       );
       setRows(formattedRows);
       setTotalRecord(tasks.total);
+      setLoading(false)
     }
   }, [tasks]);
 
   return (
     <TableContainer className="rounded-lg border border-gray-300 overflow-scroll">
       {/* Table Headers and Body */}
+      {loading ? (
+        <Loader/>
+      ) : (
       <Table aria-label="collapsible table" sx={{ maxHeight: "77vh" }}>
         {/* Table Headers */}
         <TableHead>
@@ -328,6 +334,7 @@ export default function CollapsibleTable() {
           ))}
         </TableBody>
       </Table>
+      )}
 
       {/* Pagination Component */}
       <TablePagination
