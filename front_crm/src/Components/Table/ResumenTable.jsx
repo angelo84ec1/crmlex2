@@ -34,6 +34,7 @@ import SubTaskStatus from "../PopUp/SubTasks/SubTaskStatus.jsx";
 import SubTaskMultiSelect from "../UseAble/SubTaskMultiSelect.jsx";
 import MailOutlinedIcon from "@mui/icons-material/MailOutlined.js";
 import AddTaskEmailPopUp from "../PopUp/Tasks/Task Email/AddTaskEmailPopUp.jsx";
+import Loader from '../Loader.jsx';
 import { useEffect } from "react";
 
 function Row(props){
@@ -217,6 +218,7 @@ export default function TaskTable() {
     const { t } = useTranslation()
     const contentRef = React.useRef('')
     const ref = React.useRef(null)
+    const [loading, setLoading] = React.useState(true);
 
     const { user } = useSelector(state => state.Auth)
 
@@ -226,6 +228,7 @@ export default function TaskTable() {
 
     useEffect(() => {
         // Fetch tasks when page changes or component mounts
+        setLoading(true);
        dispatch(fetchTasks({ user_id: user.user_id, page: 0 }));
       }, [dispatch]);
 
@@ -235,6 +238,7 @@ export default function TaskTable() {
                 return createData(item.project_name, item.assign_user, item.project_status, item.project_startdate, item.project_enddate, item.tasks, item.id, item.project_description, item.progress, item.tasks)
             });
             setRows(rowArr);
+            setLoading(false);
         }
     }, [tasks]);
 
@@ -276,6 +280,9 @@ export default function TaskTable() {
                     sx={{ display: `${projectTasks.length < 1 && 'none'}` }}
                     endIcon={<DownloadIcon />}
                     onClick={handleDownloadPDF}> PDF</Button>
+                    {loading ? (
+        <Loader/>
+      ) : (
                 <TableContainer >
 
                   <div ref={contentRef}>
@@ -313,7 +320,7 @@ export default function TaskTable() {
                     <AddTaskPop ref={ref} />
 
                 </TableContainer>
-
+      )}
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 20]}
                     component="div"
