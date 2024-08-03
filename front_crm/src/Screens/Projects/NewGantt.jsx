@@ -57,6 +57,14 @@ const NewGantt = () => {
                 div.parentNode.replaceChild(newDiv, div);
                 div.onclick = () => handleArrowClick(task);
             } 
+
+			const divFrom = document.querySelector('div[style*="display: table-cell;"][style*="vertical-align: middle;"][style*="overflow: hidden;"][style*="text-overflow: ellipsis;"][style*="min-width: 150px;"][style*="max-width: 150px;"]');
+			if (divFrom) {
+				divFrom.style.overflowX = 'auto'; 
+				divFrom.style.textOverflow = 'clip'; 
+				divFrom.style.whiteSpace = 'nowrap'; 
+				divFrom.style.cursor = 'nowrap'; 
+			}
             acc.push({
                 ...task
             });
@@ -64,8 +72,6 @@ const NewGantt = () => {
             if (isExpanded) {
                 const childTasks = ganttChart.filter(child => child.parent_id === task.id && child.project_type === 'sub_task');
                 acc.push(...childTasks.map(childTask => {
-                    const isChildExpanded = expandedTasks[childTask.id] || false;
-    
                     return {
                         ...childTask
                     };
@@ -143,6 +149,7 @@ const NewGantt = () => {
 			</Box>
 			{ganttChart.length > 0 &&
 				<GanttOriginal
+					className="GanttOriginal"
 					tasks={rows}
 					viewMode={viewMode}
 					columnWidth={100}
