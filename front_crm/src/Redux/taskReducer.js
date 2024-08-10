@@ -18,6 +18,24 @@ export const fetchTasks = createAsyncThunk(
     }
   }
 );
+
+export const fetchResumeTasks = createAsyncThunk(
+  "fetchResumeTasks",
+  async (params, thunkAPI) => {
+    try {
+      const user_id = params.user_id ? params.user_id : params;
+      const page = params.page ? params.page : 0;
+      const response = await axios.get(
+        `${import.meta.env.VITE_REACT_API_URL}/api/resume/projects/${user_id}?page=${
+          page + 1
+        }`
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 // ------------------------------------------------------ADD NEW TASK-------------------------------
 
 export const fetchProjectTasks = createAsyncThunk(
@@ -619,6 +637,19 @@ export const taskSlice = createSlice({
         }
       })
       .addCase(fetchTasks.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(fetchResumeTasks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchResumeTasks.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        if (action.payload != null) {
+          state.tasks = action.payload.projects;
+        }
+      })
+      .addCase(fetchResumeTasks.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

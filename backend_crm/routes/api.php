@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\RegisterController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\API\ProjectTaskController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\NewTaskController;
 use App\Http\Controllers\API\NewSubTaskController;
+use App\Http\Controllers\API\XlController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +51,7 @@ Route::controller(CustomerController::class)->group(function(){
 Route::controller(ProjectController::class)->group(function () {
     Route::get('alltasklist/{id}' , 'tasklistall');
     Route::get('projects/{id}', 'listProjects');
+    Route::get('resume/projects/{id}', 'ResumeProjects');
     Route::post('projects', 'addProject');
 //    Route::get('projects/{id}', 'getproject');
     Route::post('editproject/{id}', 'editProject');
@@ -59,6 +60,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::post('editproject/{id}', 'editProject');
     Route::get('deleteprojects/{id}', 'deleteProject');
 });
+
+Route::get('resume/projects/xl/{id}/{page}', [XlController::class, 'ResumeProjectsXL']);
 
 Route::controller(ProjectTaskController::class)->group(function() {
     Route::get('projects/{projectId}/tasks', 'index');

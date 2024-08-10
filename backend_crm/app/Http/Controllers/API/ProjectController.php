@@ -319,4 +319,28 @@ class ProjectController extends Controller
         }
         return response()->json(['projects' => $projects], 200);
     }
+
+    public function ResumeProjects($id)
+    {
+        $user = User::find($id);
+        if ($user->role == 'Cliente' or  $user->role == 'Digitador' or  $user->role == 'Assistant' or  $user->role == 'Supervisor') {
+            $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
+                ->with('tasks.taskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName')
+                ->whereHas('assignUser', function ($query) use ($id) {
+                    $query->where('assign_user_id', $id);
+                })
+                ->orderBy('id', 'DESC')
+                ->paginate(10);
+        } else {
+            $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
+                ->with('tasks.taskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName')
+                ->orderBy('id', 'DESC')
+                ->paginate(10);
+        }
+        return response()->json(['projects' => $projects], 200);
+    }
 }
