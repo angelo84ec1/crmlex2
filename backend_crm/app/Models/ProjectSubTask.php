@@ -17,4 +17,9 @@ class ProjectSubTask extends Model
         return $this->belongsTo(NewSubTask::class, 'sub_task_id','id');
     }
 
+    public function subTasksAssignUser()
+    {
+        return $this->hasMany(SubTaskAssignUser::class, 'new_sub_task_id','sub_task_id');
+    }
+
 }

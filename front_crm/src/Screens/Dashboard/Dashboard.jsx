@@ -4,6 +4,7 @@ import DashboardTask from './DashboardTask'
 import { LinearProgress, Typography } from '@mui/material'
 import DashboardProjects from './DashboardProjects'
 import { useSelector } from 'react-redux'
+import TaskBarChart from '../../Components/Charts/BarChart';
 
 export default function Dashboard() {
   const today = new Date();
@@ -42,11 +43,19 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-2">
               <div className="box-1 box-shadow  mt-2">
                 <div className="box1 ">
-                  <h4>{t('total_task')}</h4>
+                  <h4>Tareas</h4>
                   <span>{dashboardData.total_tasks}</span>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-2">
+              <div className="box-1 box-shadow  mt-2">
+                <div className="box1 ">
+                  <h4>Sub Tareas</h4>
+                  <span>{dashboardData.total_sub_tasks}</span>
                 </div>
               </div>
             </div>
@@ -165,6 +174,9 @@ export default function Dashboard() {
               {/* <!-- =======todo-list========== --> */}
               {/* <TodoList /> */}
               {/* <!-- =======todo-list-end========== --> */}
+            </div>
+            <div className="col-md-12">
+                <TaskBarChart />
             </div>
           </div>
         </div>

@@ -44,6 +44,10 @@ class XlController extends Controller
                 ->take($projectsPerPage)
                 ->get();
         }
+        // echo "<pre>";
+        // echo print_r($projects->toArray());
+        // echo "</pre>";
+        // exit();
     return Excel::download(new ProjectsExport($projects), 'projects.xlsx');
     }
 }

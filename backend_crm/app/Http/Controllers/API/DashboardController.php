@@ -10,6 +10,9 @@ use App\Models\ProjectTask;
 
 use App\Models\User;
 use App\Http\Controllers\API\BaseController as BaseController;
+use App\Models\NewTaskAssignUser;
+use App\Models\ProjectSubTask;
+use App\Models\SubTaskAssignUser;
 use Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +22,6 @@ class DashboardController extends Controller
 {
     public function index($user_id)
     {
-
         $userId = $user_id;
         $user = User::find($user_id);
         $id = $user_id;
@@ -30,10 +32,12 @@ class DashboardController extends Controller
                     $query->where('assign_user_id', $id);
                 })
                 ->count();
-            $totalTasks = ProjectTask::with('tasksAssignUser')
-                ->whereHas('tasksAssignUser', function ($query) use ($id) {
-                    $query->where('assign_user_id', $id);
-                })->count();
+            // $totalTasks = ProjectTask::with('tasksAssignUser')
+            //     ->whereHas('tasksAssignUser', function ($query) use ($id) {
+            //         $query->where('assign_user_id', $id);
+            //     })->count();
+            $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
+            $totalSubTasks = SubTaskAssignUser::where('assign_user_id', $id)->count();
 
             $totalUsers = User::count();
 
@@ -109,11 +113,17 @@ class DashboardController extends Controller
                     $query->where('assign_user_id', $id);
                 })
                 ->count();
+                $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
+            // $totalTasks = ProjectTask::with('tasksAssignUser')
+            //     ->whereHas('tasksAssignUser', function ($query) use ($id) {
+            //         $query->where('assign_user_id', $id);
+            //     })->count();
+            // $totalSubTasks = ProjectSubTask::with('subTasksAssignUser')
+            //     ->whereHas('subTasksAssignUser', function ($query) use ($id) {
+            //         $query->where('assign_user_id', $id);
+            //     })->count();
+            $totalSubTasks = SubTaskAssignUser::where('assign_user_id', $id)->count();
 
-            $totalTasks = ProjectTask::with('tasksAssignUser')
-                ->whereHas('tasksAssignUser', function ($query) use ($id) {
-                    $query->where('assign_user_id', $id);
-                })->count();
             //        $totalTasks = ProjectTask::join('projects', 'projects.id', '=', 'projects_task.project_id')->count();
             $totalUsers = User::count();
             $completedProjects = Project::where('project_status', 'completed')->count();
@@ -165,6 +175,7 @@ class DashboardController extends Controller
         $response = [
             'total_projects' => $totalProjects,
             'total_tasks' => $totalTasks,
+            'total_sub_tasks' => $totalSubTasks,
             'total_users' => $totalUsers,
             'completed_projects' => $completedProjects,
             'active_projects' => $activeProjects,

@@ -31,12 +31,12 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
     public function headings(): array
     {
         return [
-            'Project Name',
-            'Assigned To',
-            'Start Date',
-            'End Date',
-            'Progress',
-            'Status',
+            'Cliente',
+            'Asignado',
+            'Fecha de inicio',
+            'Fecha de vencimiento',
+            'Progreso',
+            'Estado',
         ];
     }
 
@@ -68,13 +68,23 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                 'status' => $project->project_status,
             ];
 
-            foreach ($project->tasks as $task) {
+            foreach ($project->tasks as $index => $task) {
+                if($index == 0){
+                    $this->data[] = [
+                        'project_name' => 'Tarea ',
+                        'assignUser' => 'Asignado',
+                        'start_date' => 'Fecha de inicio',
+                        'end_date' => 'Fecha de vencimiento',
+                        'progress' => 'Progreso',
+                        'status' => 'Estado',
+                    ];
+                }
                 $assignedTaskUsers = $task->taskName->assignUser
                     ? $task->taskName->assignUser->map(fn($taskAssignUser) => $taskAssignUser->assinBy->name)->implode(', ')
                     : '';
 
                 $this->data[] = [
-                    'project_name' => '— ' . $task->taskName->title,
+                    'project_name' => $task->taskName->title,
                     'assignUser' => $assignedTaskUsers,
                     'start_date' => $task->taskName->start_date,
                     'end_date' => $task->taskName->end_date,
@@ -82,13 +92,23 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                     'status' => $task->taskName->status,
                 ];
 
-                foreach ($task->subTasks as $subTask) {
+                foreach ($task->subTasks as $sub_index => $subTask) {
+                    if($sub_index == 0){
+                        $this->data[] = [
+                            'project_name' => 'Subtarea ',
+                            'assignUser' => 'Asignado',
+                            'start_date' => 'Fecha de inicio',
+                            'end_date' => 'Fecha de vencimiento',
+                            'progress' => 'Progreso',
+                            'status' => 'Estado',
+                        ];
+                    }
                     $assignedSubTaskUsers = $subTask->subTaskName->assignUser
                         ? $subTask->subTaskName->assignUser->map(fn($subTaskAssignUser) => $subTaskAssignUser->assinBy->name)->implode(', ')
                         : '';
 
                     $this->data[] = [
-                        'project_name' => '— — ' . $subTask->subTaskName->title,
+                        'project_name' => $subTask->subTaskName->title,
                         'assignUser' => $assignedSubTaskUsers,
                         'start_date' => $subTask->subTaskName->start_date,
                         'end_date' => $subTask->subTaskName->end_date,
@@ -114,22 +134,17 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
         ];
 
         foreach ($this->data as $row) {
-            if (str_starts_with($row['project_name'], '— — ')) {
-                // $styles[$currentRow] = [
-                //     'font' => ['color' => ['rgb' => '000000']],
-                //     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFFFFF']],
-                // ];
-            } elseif (str_starts_with($row['project_name'], '— ')) {
-                $styles[$currentRow] = [
-                    'font' => ['color' => ['rgb' => 'FFFFFF']],
-                    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '76933C']],
-                ];
-            } else {
+            if (str_starts_with($row['project_name'], 'Tarea ')) {
                 $styles[$currentRow] = [
                     'font' => ['color' => ['rgb' => 'FFFFFF']],
                     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '008000']],
                 ];
-            }
+            } elseif (str_starts_with($row['project_name'], 'Subtarea ')) {
+                $styles[$currentRow] = [
+                    'font' => ['color' => ['rgb' => 'FFFFFF']],
+                    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '538DD5']],
+                ];
+            } 
             $currentRow++;
         }
 
