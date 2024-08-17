@@ -20,8 +20,22 @@ use Illuminate\Support\Facades\URL;
 
 class DashboardController extends Controller
 {
+
+    private function getColorForStatus($status)
+{
+    $colors = [
+        'pending' => '#D9BB41',
+        'active' => '#4A00E0',
+        'completed' => '#2ED47A',
+        'new' => '#8E2DE2',
+        'late' => '#CD500C',
+    ];
+    return $colors[$status] ?? '#000000'; // Default color
+}
+
     public function index($user_id)
     {
+
         $userId = $user_id;
         $user = User::find($user_id);
         $id = $user_id;
@@ -38,6 +52,28 @@ class DashboardController extends Controller
             //     })->count();
             $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
             $totalSubTasks = SubTaskAssignUser::where('assign_user_id', $id)->count();
+
+            $statuses = ['pending', 'active', 'completed', 'new', 'late'];
+            $statusCounts = array_fill_keys($statuses, 0);
+            $tasks = NewTaskAssignUser::join('new_tasks', 'new_tasks.id', 'new_task_assign_users.new_task_id')->select('new_tasks.status', DB::raw('count(*) as count'))
+            ->where('new_task_assign_users.assign_user_id', $id)
+            ->groupBy('new_tasks.status')
+            ->pluck('count', 'status');
+
+            foreach ($tasks as $status => $count) {
+                $statusCounts[$status] = $count;
+            }
+
+            $taskStatusPercentage = [];
+            foreach ($statuses as $status) {
+                $count = $statusCounts[$status];
+                $percentage = $totalTasks > 0 ? round(($count / $totalTasks) * 100) : 0;
+                $taskStatusPercentage[] = [
+                    'name' => $status,
+                    'Tareas' => $percentage,
+                    'color' => $this->getColorForStatus($status)
+                ];
+            }
 
             $totalUsers = User::count();
 
@@ -124,6 +160,29 @@ class DashboardController extends Controller
             //     })->count();
             $totalSubTasks = SubTaskAssignUser::where('assign_user_id', $id)->count();
 
+            $statuses = ['pending', 'active', 'completed', 'new', 'late'];
+            $statusCounts = array_fill_keys($statuses, 0);
+            $tasks = NewTaskAssignUser::join('new_tasks', 'new_tasks.id', 'new_task_assign_users.new_task_id')->select('new_tasks.status', DB::raw('count(*) as count'))
+            ->where('new_task_assign_users.assign_user_id', $id)
+            ->groupBy('new_tasks.status')
+            ->pluck('count', 'status');
+
+            foreach ($tasks as $status => $count) {
+                $statusCounts[$status] = $count;
+            }
+
+            $taskStatusPercentage = [];
+            foreach ($statuses as $status) {
+                $count = $statusCounts[$status];
+                $percentage = $totalTasks > 0 ? round(($count / $totalTasks) * 100) : 0;
+                $taskStatusPercentage[] = [
+                    'name' => $status,
+                    'Tareas' => $percentage,
+                    'color' => $this->getColorForStatus($status)
+                ];
+            }
+
+
             //        $totalTasks = ProjectTask::join('projects', 'projects.id', '=', 'projects_task.project_id')->count();
             $totalUsers = User::count();
             $completedProjects = Project::where('project_status', 'completed')->count();
@@ -183,7 +242,8 @@ class DashboardController extends Controller
             'pending_projects' => $pendingProjects,
             'latest_projects' => $projects,
             'newProjects' => $newProjects,
-            'lateProjects' => $lateProjects
+            'lateProjects' => $lateProjects,
+            'taskStatusPercentage' => $taskStatusPercentage
 
         ];
 

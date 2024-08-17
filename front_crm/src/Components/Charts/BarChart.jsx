@@ -1,16 +1,31 @@
-// src/SimpleBarChart.js
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, LabelList } from 'recharts';
-
-const data = [
-  { name: 'Revision', Cliente: 50, Tareas: 20, Subtareas: 40, color1: '#8E2DE2', color2: '#D9BB41', color3: '#4C02E0' }, 
-  { name: 'Curso', Cliente: 30, Tareas: 25, Subtareas: 35, color1: '#8E2DE2', color2: '#D9BB41', color3: '#4C02E0' }, // Blue, Red, Green
-  { name: 'Completdo', Cliente: 5, Tareas: 1, Subtareas: 2, color1: '#8E2DE2', color2: '#D9BB41', color3: '#4C02E0' }, // Green, Gold, Slate Blue
-  { name: 'Nuevo', Cliente: 35, Tareas: 45, Subtareas: 20, color1: '#8E2DE2', color2: '#D9BB41', color3: '#4C02E0' }, // Gold, Slate Blue, Red
-  { name: 'Atrasado', Cliente: 40, Tareas: 35, Subtareas: 45, color1: '#8E2DE2', color2: '#D9BB41', color3: '#4C02E0' }, // Slate Blue, Red, Blue
-];
+import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchDashboard } from '../../Redux/dashboardReducer';
 
 const SimpleBarChart = () => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { dashboardData, status, error } = useSelector((state) => state.Dashboard);
+  const { user } = useSelector(state => state.Auth);
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchDashboard(user.user_id));
+  }, [dispatch, user.user_id]);
+
+  useEffect(() => {
+    if (dashboardData?.taskStatusPercentage) {
+      const translatedArray = dashboardData.taskStatusPercentage.map(item => ({
+        name: t(item.name), 
+        Tareas: item.Tareas,
+        color: item.color   
+      }));
+      setChartData(translatedArray);
+    }
+  }, [dashboardData, t]);
+
   return (
     <div className="box-shadow mt-4 mb-5" style={{ borderRadius: '20px' }}>
       <div
@@ -21,7 +36,7 @@ const SimpleBarChart = () => {
           borderBottom: '4px solid white'
         }}
       >
-        <h2>Tareas</h2>
+        <h2>{t('Tareas')}</h2>
       </div>
       <div
         className='py-4 d-flex justify-content-center'
@@ -30,26 +45,17 @@ const SimpleBarChart = () => {
           borderRadius: '0 0 20px 20px'
         }}
       >
-        <BarChart width={800} height={300} data={data} className='bg-white py-4'>
+        <BarChart width={800} height={300} data={chartData} className='bg-white py-4'>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip />
+          <Tooltip formatter={(value) => `${value}%`} />
           <Legend />
-          <Bar dataKey="Cliente" barSize={20} fill="#FF6347">
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color1} />
+          <Bar dataKey="Tareas" barSize={80} fill='#2E7D32'>
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
-          </Bar>
-          <Bar dataKey="Tareas" barSize={20} fill="#4682B4">
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color2} />
-            ))}
-          </Bar>
-          <Bar dataKey="Subtareas" barSize={20} fill="#32CD32">
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color3} />
-            ))}
+            <LabelList dataKey="Tareas" formatter={(value) => `${value}%`} position="top" />
           </Bar>
         </BarChart>
       </div>
