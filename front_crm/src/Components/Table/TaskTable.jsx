@@ -282,6 +282,7 @@ export default function TaskTable() {
     const { projectTasks } = useSelector(state => state.TaskReducer)
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [search,] = React.useState(projectTasks)
+   
     const { t } = useTranslation()
     const contentRef = React.useRef('')
     const ref = React.useRef(null)
@@ -373,7 +374,6 @@ export default function TaskTable() {
                             {rows
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    console.log(row)
                                     return (
                                         <Row key={row.id} row={row} />
 
@@ -390,7 +390,7 @@ export default function TaskTable() {
 
                     </Box>
 
-                    <AddTaskPop ref={ref} />
+                    <AddTaskPop ref={ref}/>
 
                 </TableContainer>
 
