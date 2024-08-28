@@ -41,8 +41,8 @@ const TaskStatus = React.forwardRef(function TaskStatus({ props }, ref) {
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
-            // dispatch(fetchProjectTasks())
-            // dispatch(resetTask())
+            dispatch(fetchProjectTasks())
+            dispatch(resetTask())
         }
     }, [edittaskStatus])
 

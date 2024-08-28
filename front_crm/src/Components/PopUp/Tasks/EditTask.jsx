@@ -46,8 +46,8 @@ const EditTask = React.forwardRef(function EditTaskPop({ props }, ref) {
             // dispatch(getSchedule(user.user_id))
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
-            // dispatch(fetchProjectTasks())
-            // dispatch(resetTask())
+            dispatch(fetchProjectTasks())
+            dispatch(resetTask())
         }
     }, [editNewTask])
 

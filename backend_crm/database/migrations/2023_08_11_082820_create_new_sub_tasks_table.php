@@ -21,7 +21,7 @@ return new class extends Migration
             $table->dateTime('end_date');
             $table->longText('description')->nullable();
             $table->integer('progress')->default(0);
-            $table->string('status');
+            $table->string('status')->default('new');
             $table->integer('created_by');
             $table->timestamp('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('updated_by')->nullable();

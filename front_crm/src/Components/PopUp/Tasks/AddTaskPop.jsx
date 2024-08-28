@@ -17,7 +17,6 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
     const dispatch = useDispatch()
     const { taskStatus } = useSelector(state => state.TaskReducer)
     const { user } = useSelector(state => state.Auth)
-    const alertShown = React.useRef(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -29,8 +28,7 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
 
     React.useEffect(() => {
 
-        if (taskStatus.message && !alertShown.current) {
-            alertShown.current = true;
+        if (taskStatus.message) {
             handleClose();
             swal(
                 {
@@ -46,7 +44,7 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
             // dispatch(fetchDashboard(user.user_id))
             // dispatch(fetchGanttChart(user.user_id))
             dispatch(fetchProjectTasks())
-            // dispatch(resetTask())
+            dispatch(resetTask())
         }
     }, [taskStatus])
 
