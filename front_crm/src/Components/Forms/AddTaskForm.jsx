@@ -193,43 +193,57 @@ export default function AddTaskForm() {
             for (let column = 'F'.charCodeAt(0); column <= 'Z'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet[colLetter + '2'] ? firstSheet[colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             for (let column = 'A'.charCodeAt(0); column <= 'Z'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet['A' + colLetter + '2'] ? firstSheet['A' + colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             for (let column = 'A'.charCodeAt(0); column <= 'Z'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet['B' + colLetter + '2'] ? firstSheet['B' + colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             for (let column = 'A'.charCodeAt(0); column <= 'Z'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet['C' + colLetter + '2'] ? firstSheet['C' + colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             for (let column = 'A'.charCodeAt(0); column <= 'Z'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet['D' + colLetter + '2'] ? firstSheet['D' + colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             for (let column = 'A'.charCodeAt(0); column <= 'Z'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet['E' + colLetter + '2'] ? firstSheet['E' + colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             for (let column = 'A'.charCodeAt(0); column <= 'E'.charCodeAt(0); column++) {
                 const colLetter = String.fromCharCode(column);
                 const cellValue = firstSheet['F' + colLetter + '2'] ? firstSheet['F' + colLetter + '2'].v : '';
-                otherData.push(cellValue);
+                if (cellValue !== '') {
+                    otherData.push(cellValue);
+                }
             }
 
             // // // Check for column FE2
