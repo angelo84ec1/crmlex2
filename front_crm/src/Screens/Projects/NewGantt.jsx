@@ -160,7 +160,7 @@ const NewGantt = () => {
 			<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}>
 				<button onClick={handleBackPageClick} disabled={page === 0} className={`mx-5 btn ${page === 0 ? "btn-secondary" : "btn-primary"}`}>{t('back')}</button>
 				Page {page / 7 + 1}
-				<button onClick={handleNextPageClick} disabled={ganttChart.length <= page + 7} className={`mx-5 btn ${ganttChart.length <= page + 7 ? "btn-secondary" : "btn-primary"}`}>{t('next')}</button>
+				<button onClick={handleNextPageClick} disabled={parentTasks.length <= page + 7} className={`mx-5 btn ${parentTasks.length <= page + 7 ? "btn-secondary" : "btn-primary"}`}>{t('next')}</button>
 			</Box>
 		</React.Fragment>
 	);
