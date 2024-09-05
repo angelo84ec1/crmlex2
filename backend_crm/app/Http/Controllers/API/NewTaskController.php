@@ -28,7 +28,8 @@ class NewTaskController extends Controller{
             'start_date' => Carbon::createFromDate($request->start_date)->format('Y/m/d'),
             'description' => $request->description,
             'end_date' => Carbon::createFromDate($request->end_date)->format('Y/m/d'),
-            'extend_days' => $request->extend_days?1:0,
+            'extend_days' => $request->extend_days ? 1 : 0,
+            'status' => 'new',
             'created_by' => $request->user_id,
         ];
         $create = NewTask::create($task);
@@ -38,6 +39,7 @@ class NewTaskController extends Controller{
                     'project_id'=>$project_id,
                     'task_id'=> $create->id,
                     'progress'=> 0,
+                    'status' => 'new',
                     'user_id'=>  $request->user_id
                 ];
                 ProjectTask::create($task);
@@ -49,6 +51,7 @@ class NewTaskController extends Controller{
                         'title' => $subtask,
                         'start_date' => Carbon::createFromDate($request->subtask_start_date)->format('Y/m/d'),
                         'end_date' => Carbon::createFromDate($request->subtask_end_date)->format('Y/m/d'),
+                        'status' => 'new',
                         'created_by' => $request->user_id,
                     ];
                    $subTx =  NewSubTask::create($stask);
@@ -58,6 +61,7 @@ class NewTaskController extends Controller{
                             'task_id' => $create->id,
                             'sub_task_id'=>$subTx->id,
                             'progress'=> 0,
+                            'status' => 'new',
                             'user_id' =>  $request->user_id
                         ];
                         ProjectSubTask::create($st);

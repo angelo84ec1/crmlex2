@@ -12,7 +12,7 @@ import {resetTask, fetchProjectTasks, fetchTasks} from '../../../Redux/taskReduc
 import { getSchedule } from '../../../Redux/userReducer';
 import { fetchGanttChart,fetchDashboard } from '../../../Redux/dashboardReducer';
 
-const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
+const AddTaskPop = React.forwardRef(function AddTaskPop({ setAddTaskBtn, ...props }, ref) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch()
     const { taskStatus } = useSelector(state => state.TaskReducer)
@@ -29,6 +29,7 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
     React.useEffect(() => {
 
         if (taskStatus.message) {
+            setAddTaskBtn(false);
             handleClose();
             swal(
                 {
@@ -45,6 +46,9 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
             // dispatch(fetchGanttChart(user.user_id))
             dispatch(fetchProjectTasks())
             dispatch(resetTask())
+            setTimeout(() => {
+                setAddTaskBtn(true);
+            }, 6000);
         }
     }, [taskStatus])
 
@@ -66,7 +70,7 @@ const AddTaskPop = React.forwardRef(function AddTaskPop({ props }, ref) {
                     <DialogContentText id="addContactDescription">
                     </DialogContentText>
                         {/* Add task */}
-                    <AddTaskForm  />
+                    <AddTaskForm/>
                 </DialogContent>
                 {/* <DialogActions>
                     <Button onClick={handleClose}>Disagree</Button>
