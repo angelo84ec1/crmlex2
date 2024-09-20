@@ -55,22 +55,22 @@ class DashboardController extends Controller
 
             $statuses = ['pending', 'active', 'completed', 'new', 'late'];
             $statusCounts = array_fill_keys($statuses, 0);
-            $tasks = NewTaskAssignUser::join('new_tasks', 'new_tasks.id', 'new_task_assign_users.new_task_id')->select('new_tasks.status', DB::raw('count(*) as count'))
-            ->where('new_task_assign_users.assign_user_id', $id)
-            ->groupBy('new_tasks.status')
+            $tasks = SubTaskAssignUser::join('new_sub_tasks', 'new_sub_tasks.id', 'sub_task_assign_users.new_sub_task_id')->select('new_sub_tasks.status', DB::raw('count(*) as count'))
+            ->where('sub_task_assign_users.assign_user_id', $id)
+            ->groupBy('new_sub_tasks.status')
             ->pluck('count', 'status');
 
             foreach ($tasks as $status => $count) {
                 $statusCounts[$status] = $count;
             }
 
-            $taskStatusPercentage = [];
+            $subTaskStatusPercentage = [];
             foreach ($statuses as $status) {
                 $count = $statusCounts[$status];
-                $percentage = $totalTasks > 0 ? round(($count / $totalTasks) * 100) : 0;
-                $taskStatusPercentage[] = [
+                $percentage = $totalSubTasks > 0 ? round(($count / $totalSubTasks) * 100) : 0;
+                $subTaskStatusPercentage[] = [
                     'name' => $status,
-                    'Tareas' => $percentage,
+                    'SubTareas' => $percentage,
                     'color' => $this->getColorForStatus($status)
                 ];
             }
@@ -162,22 +162,22 @@ class DashboardController extends Controller
 
             $statuses = ['pending', 'active', 'completed', 'new', 'late'];
             $statusCounts = array_fill_keys($statuses, 0);
-            $tasks = NewTaskAssignUser::join('new_tasks', 'new_tasks.id', 'new_task_assign_users.new_task_id')->select('new_tasks.status', DB::raw('count(*) as count'))
-            ->where('new_task_assign_users.assign_user_id', $id)
-            ->groupBy('new_tasks.status')
+            $tasks = SubTaskAssignUser::join('new_sub_tasks', 'new_sub_tasks.id', 'sub_task_assign_users.new_sub_task_id')->select('new_sub_tasks.status', DB::raw('count(*) as count'))
+            ->where('sub_task_assign_users.assign_user_id', $id)
+            ->groupBy('new_sub_tasks.status')
             ->pluck('count', 'status');
 
             foreach ($tasks as $status => $count) {
                 $statusCounts[$status] = $count;
             }
 
-            $taskStatusPercentage = [];
+            $subTaskStatusPercentage = [];
             foreach ($statuses as $status) {
                 $count = $statusCounts[$status];
-                $percentage = $totalTasks > 0 ? round(($count / $totalTasks) * 100) : 0;
-                $taskStatusPercentage[] = [
+                $percentage = $totalSubTasks > 0 ? round(($count / $totalSubTasks) * 100) : 0;
+                $subTaskStatusPercentage[] = [
                     'name' => $status,
-                    'Tareas' => $percentage,
+                    'SubTareas' => $percentage,
                     'color' => $this->getColorForStatus($status)
                 ];
             }
@@ -243,7 +243,7 @@ class DashboardController extends Controller
             'latest_projects' => $projects,
             'newProjects' => $newProjects,
             'lateProjects' => $lateProjects,
-            'taskStatusPercentage' => $taskStatusPercentage
+            'subTaskStatusPercentage' => $subTaskStatusPercentage
 
         ];
 

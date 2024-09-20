@@ -16,10 +16,10 @@ const SimpleBarChart = () => {
   }, [dispatch, user.user_id]);
 
   useEffect(() => {
-    if (dashboardData?.taskStatusPercentage) {
-      const translatedArray = dashboardData.taskStatusPercentage.map(item => ({
+    if (dashboardData?.subTaskStatusPercentage) {
+      const translatedArray = dashboardData.subTaskStatusPercentage.map(item => ({
         name: t(item.name), 
-        Tareas: item.Tareas,
+        SubTareas: item.SubTareas,
         color: item.color   
       }));
       setChartData(translatedArray);
@@ -36,7 +36,7 @@ const SimpleBarChart = () => {
           borderBottom: '4px solid white'
         }}
       >
-        <h2>{t('Tareas')}</h2>
+        <h2>{t('SubTareas')}</h2>
       </div>
       <div
         className='py-4 d-flex justify-content-center'
@@ -51,11 +51,11 @@ const SimpleBarChart = () => {
           <YAxis />
           <Tooltip formatter={(value) => `${value}%`} />
           <Legend />
-          <Bar dataKey="Tareas" barSize={80} fill='#2E7D32'>
+          <Bar dataKey="SubTareas" barSize={80} fill='#2E7D32'>
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
-            <LabelList dataKey="Tareas" formatter={(value) => `${value}%`} position="top" />
+            <LabelList dataKey="SubTareas" formatter={(value) => `${value}%`} position="top" />
           </Bar>
         </BarChart>
       </div>
