@@ -54,6 +54,14 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
 
     private function prepareData()
     {
+        $statusTranslations = [
+            'pending' => 'Revisión',
+            'active' => 'Curso',
+            'completed' => 'Completado',
+            'late' => 'Atrasado',
+            'new' => 'Nuevo',
+        ];
+
         foreach ($this->projects as $project) {
             $assignedProjectUsers = $project->assignUser
                 ? $project->assignUser->map(fn($assignUser) => $assignUser->assinBy->name)->implode(', ')
@@ -65,7 +73,7 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                 'start_date' => $project->project_startdate,
                 'end_date' => $project->project_enddate,
                 'progress' => $project->progress . '%',
-                'status' => $project->project_status,
+                'status' => $statusTranslations[$project->project_status] ?? $project->project_status,
             ];
 
             foreach ($project->tasks as $index => $task) {
@@ -89,7 +97,7 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                     'start_date' => $task->taskName->start_date,
                     'end_date' => $task->taskName->end_date,
                     'progress' => $task->taskName->progress . '%',
-                    'status' => $task->taskName->status,
+                    'status' => $statusTranslations[$task->taskName->status] ?? $project->project_status,
                 ];
 
                 foreach ($task->subTasks as $sub_index => $subTask) {
@@ -113,7 +121,7 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                         'start_date' => $subTask->subTaskName->start_date,
                         'end_date' => $subTask->subTaskName->end_date,
                         'progress' => $subTask->subTaskName->progress . '%',
-                        'status' => $subTask->subTaskName->status,
+                        'status' => $statusTranslations[$subTask->subTaskName->status] ?? $project->project_status,
                     ];
                 }
             }
