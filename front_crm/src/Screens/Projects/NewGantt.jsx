@@ -39,12 +39,11 @@ const NewGantt = () => {
     }));
   };
 
-  const handleSubTaskClick = (expandedSubTasksCount) => {
-    if (expandedSubTasksCount > 0 && showSubTasks === false) {
-      setShowSubTasks(true);
-    } else{
-		setShowSubTasks(false);
-	}
+  const handleSubTaskClick = (selectedSubTask) => {
+    setExpandedSubTasks((prev) => ({
+      ...prev,
+      [selectedSubTask.id]: !prev[selectedSubTask.id],
+    }));
   };
 
   useEffect(() => {
@@ -55,22 +54,10 @@ const NewGantt = () => {
 
     const updatedRows = paginatedTasks.reduce((acc, task) => {
       const isTaskExpanded = expandedTasks[task.id] || false;
-      const div = document.querySelector(
-        'div[style*="color: rgb(86, 86, 86);"][style*="font-size: 0.6rem;"][style*="padding: 0.15rem 0.2rem 0rem;"][style*="user-select: none;"][style*="cursor: pointer;"]'
+      const Tasks = ganttChart.filter(
+        (child) =>
+          child.parent_id === task.id && child.project_type === "sub_task"
       );
-      if (div) {
-        const newDiv = document.createElement("div");
-        newDiv.style.color = "rgb(86, 86, 86)";
-        newDiv.style.fontSize = "0.7rem";
-        newDiv.style.padding = "0.15rem 0.2rem 0rem";
-        newDiv.style.userSelect = "none";
-        newDiv.style.cursor = "pointer";
-        newDiv.innerHTML = isTaskExpanded ? "▼" : "▶";
-        newDiv.onclick = () => handleTaskClick(task);
-        div.parentNode.replaceChild(newDiv, div);
-        div.onclick = () => handleTaskClick(task);
-      }
-
       const divFrom = document.querySelector(
         'div[style*="display: table-cell;"][style*="vertical-align: middle;"][style*="overflow: hidden;"][style*="text-overflow: ellipsis;"][style*="min-width: 150px;"][style*="max-width: 150px;"]'
       );
@@ -82,67 +69,76 @@ const NewGantt = () => {
       }
       acc.push({
         ...task,
+        name: (
+          <div style={{ display: "inline-block" }}>
+            <div
+              style={{
+                color: "rgb(86, 86, 86)",
+                fontSize: "0.7rem",
+                padding: "0.15rem 0.2rem 0rem",
+                userSelect: "none",
+                cursor: "pointer",
+                display: "inline-block",
+              }}
+              onClick={() => handleTaskClick(task)}
+            >
+              {Tasks.length > 0 ? isTaskExpanded ? "▼" : "▶" : ''}
+            </div>
+            {task.name}
+          </div>
+        ),
       });
 
       if (isTaskExpanded) {
         const childTasks = ganttChart.filter(
-          (child) =>
-            child.parent_id === task.id && child.project_type === "sub_task"
+          (child) => child.parent_id === task.id && child.project_type === "sub_task"
         );
-        const expandedSubTasksCount = childTasks.reduce((subAcc, subTask) => {
-          const subSubTasks = ganttChart.filter(
-            (subSub) =>
-              subSub.parent_id === subTask.id &&
-              subSub.project_type === "sub_sub_task"
-          );
-          return subAcc + subSubTasks.length;
-        }, 0);
-        acc.push(
-          ...childTasks.map((childTask) => {
-              return {
-				...childTask,
-				name: (
-				  <div style={{ display: "inline-block" }}>
-					{expandedSubTasksCount > 0 && (
-					  <div
-						style={{
-						  color: "rgb(86, 86, 86)",
-						  fontSize: "0.7rem",
-						  padding: "0.15rem 0.2rem 0rem",
-						  userSelect: "none",
-						  cursor: "pointer",
-						  display: "inline-block",
-						}}
-						onClick={() => handleSubTaskClick(childTask.id)}
-					  >
-						{showSubTasks ? "▼" : "▶"}
-					  </div>
-					)}
-					{childTask.name}
-				  </div>
-				),
-			  };
-          })
-        );
-        if (showSubTasks) {
-          const expandedSubTasks = childTasks.reduce((subAcc, subTask) => {
+  
+        childTasks.forEach((childTask) => {
+          const isSubTaskExpanded = expandedSubTasks[childTask.id] || false;
+  
+          acc.push({
+            ...childTask,
+            name: (
+              <div style={{ display: "inline-block" }}>
+                <div
+                  style={{
+                    color: "rgb(86, 86, 86)",
+                    fontSize: "0.7rem",
+                    padding: "0.15rem 0.2rem 0rem",
+                    userSelect: "none",
+                    cursor: "pointer",
+                    display: "inline-block",
+                  }}
+                  onClick={() => handleSubTaskClick(childTask)}
+                >
+                  {isSubTaskExpanded ? "▼" : "▶"}
+                </div>
+                {childTask.name}
+              </div>
+            ),
+          });
+  
+          // Add sub-subtasks
+          if (isSubTaskExpanded) {
             const subSubTasks = ganttChart.filter(
               (subSub) =>
-                subSub.parent_id === subTask.id &&
+                subSub.parent_id === childTask.id &&
                 subSub.project_type === "sub_sub_task"
             );
-            subAcc.push(
-              ...subSubTasks.map((subSubTask) => ({
+  
+            subSubTasks.forEach((subSubTask) => {
+              acc.push({
                 ...subSubTask,
                 name: (
-                  <div style={{ paddingLeft: "2rem" }}>{subSubTask.name}</div>
+                  <div style={{ paddingLeft: "2rem" }}>
+                    {subSubTask.name}
+                  </div>
                 ),
-              }))
-            );
-            return subAcc;
-          }, []);
-          acc.push(...expandedSubTasks);
-        }
+              });
+            });
+          }
+        });
       }
 
       return acc;

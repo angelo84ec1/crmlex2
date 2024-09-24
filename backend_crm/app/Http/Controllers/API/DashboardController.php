@@ -13,6 +13,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\NewTaskAssignUser;
 use App\Models\ProjectSubTask;
 use App\Models\SubTaskAssignUser;
+use App\Models\Task;
 use Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -22,16 +23,16 @@ class DashboardController extends Controller
 {
 
     private function getColorForStatus($status)
-{
-    $colors = [
-        'pending' => '#D9BB41',
-        'active' => '#4A00E0',
-        'completed' => '#2ED47A',
-        'new' => '#8E2DE2',
-        'late' => '#CD500C',
-    ];
-    return $colors[$status] ?? '#000000'; // Default color
-}
+    {
+        $colors = [
+            'pending' => '#D9BB41',
+            'active' => '#4A00E0',
+            'completed' => '#2ED47A',
+            'new' => '#8E2DE2',
+            'late' => '#CD500C',
+        ];
+        return $colors[$status] ?? '#000000'; // Default color
+    }
 
     public function index($user_id)
     {
@@ -56,9 +57,9 @@ class DashboardController extends Controller
             $statuses = ['pending', 'active', 'completed', 'new', 'late'];
             $statusCounts = array_fill_keys($statuses, 0);
             $tasks = SubTaskAssignUser::join('new_sub_tasks', 'new_sub_tasks.id', 'sub_task_assign_users.new_sub_task_id')->select('new_sub_tasks.status', DB::raw('count(*) as count'))
-            ->where('sub_task_assign_users.assign_user_id', $id)
-            ->groupBy('new_sub_tasks.status')
-            ->pluck('count', 'status');
+                ->where('sub_task_assign_users.assign_user_id', $id)
+                ->groupBy('new_sub_tasks.status')
+                ->pluck('count', 'status');
 
             foreach ($tasks as $status => $count) {
                 $statusCounts[$status] = $count;
@@ -149,7 +150,7 @@ class DashboardController extends Controller
                     $query->where('assign_user_id', $id);
                 })
                 ->count();
-                $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
+            $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
             // $totalTasks = ProjectTask::with('tasksAssignUser')
             //     ->whereHas('tasksAssignUser', function ($query) use ($id) {
             //         $query->where('assign_user_id', $id);
@@ -163,9 +164,9 @@ class DashboardController extends Controller
             $statuses = ['pending', 'active', 'completed', 'new', 'late'];
             $statusCounts = array_fill_keys($statuses, 0);
             $tasks = SubTaskAssignUser::join('new_sub_tasks', 'new_sub_tasks.id', 'sub_task_assign_users.new_sub_task_id')->select('new_sub_tasks.status', DB::raw('count(*) as count'))
-            ->where('sub_task_assign_users.assign_user_id', $id)
-            ->groupBy('new_sub_tasks.status')
-            ->pluck('count', 'status');
+                ->where('sub_task_assign_users.assign_user_id', $id)
+                ->groupBy('new_sub_tasks.status')
+                ->pluck('count', 'status');
 
             foreach ($tasks as $status => $count) {
                 $statusCounts[$status] = $count;
@@ -403,7 +404,7 @@ class DashboardController extends Controller
                         'type' => 'project',
                         'project_type' => 'sub_task',
                         'parent_id' => $project->id,
-                        'id' => $project->id . '1788968',
+                        'id' => $project->id . '1788968' . $key,
                         'name' => $task->taskName->title . " (" . $assignUsers . ")",
                         'start' => Carbon::parse($task->taskName->start_date)->format('Y-m-d H:i'),
                         'end' => Carbon::parse($task->taskName->end_date)->format('Y-m-d H:i'),
@@ -418,7 +419,7 @@ class DashboardController extends Controller
                     ];
 
                     $data[] = $taskData;
-                    foreach ($task->taskName->subTask as $key => $stask) {
+                    foreach ($task->taskName->subTask as $subkey => $stask) {
                         $assignSub = [];
                         foreach ($stask->assignUser as $asUser) {
                             array_push($assignSub, $asUser?->assinBy?->name);
@@ -430,9 +431,9 @@ class DashboardController extends Controller
                         }
                         $subTaskData = [
                             'type' => 'project',
-                            'parent_id' => $project->id . '1788968',
+                            'parent_id' => $project->id . '1788968' . $key,
                             'project_type' => 'sub_sub_task',
-                            'id' => $project->id . $key,
+                            'id' => $project->id . $subkey,
                             'name' => $stask->title . " (" . $assignsubUsers . ")",
                             'start' => Carbon::parse($stask->start_date)->format('Y-m-d H:i'),
                             'end' => Carbon::parse($stask->end_date)->format('Y-m-d H:i'),
@@ -496,7 +497,7 @@ class DashboardController extends Controller
                         'type' => 'project',
                         'parent_id' => $project->id,
                         'project_type' => 'sub_task',
-                        'id' => $project->id . '1788968',
+                        'id' => $project->id . '1788968' . $key,
                         'name' => $task->taskName->title . " (" . $assignUsers . ")",
                         'start' => Carbon::parse($task->taskName->start_date)->format('Y-m-d H:i'),
                         'end' => Carbon::parse($task->taskName->end_date)->format('Y-m-d H:i'),
@@ -511,7 +512,7 @@ class DashboardController extends Controller
                     ];
 
                     $data[] = $taskData;
-                    foreach ($task->taskName->subTask as $key => $stask) {
+                    foreach ($task->taskName->subTask as $subkey => $stask) {
                         $assignSub = [];
                         foreach ($stask->assignUser as $asUser) {
                             array_push($assignSub, $asUser?->assinBy?->name);
@@ -523,9 +524,9 @@ class DashboardController extends Controller
                         }
                         $subTaskData = [
                             'type' => 'project',
-                            'parent_id' => $project->id . '1788968',
+                            'parent_id' => $project->id . '1788968' . $key,
                             'project_type' => 'sub_sub_task',
-                            'id' => $project->id . $key,
+                            'id' => $project->id . $subkey,
                             'name' => $stask->title . " (" . $assignsubUsers . ")",
                             'start' => Carbon::parse($stask->start_date)->format('Y-m-d H:i'),
                             'end' => Carbon::parse($stask->end_date)->format('Y-m-d H:i'),
@@ -545,5 +546,308 @@ class DashboardController extends Controller
 
         // Return the JSON response
         return response()->json($data);
+    }
+
+    public function showTasks($user_id)
+    {
+        $user = User::find($user_id);
+        $id = $user;
+        $currentDateTime = Carbon::now();
+        if ($user->role == 'Cliente' || $user->role == 'Digitador' || $user->role == 'Assistant' || $user->role == 'Supervisor') {
+            // Retrieve projects based on the user_id
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')
+                ->whereHas('assignUser', function ($quary) use ($user) {
+                    $quary->where('assign_user_id', $user->id);
+                })
+                ->orderBy('id', 'DESC')
+                ->get();
+            // Prepare the JSON response
+            $data = [];
+            foreach ($projects as $project) {
+                $assign = [];
+                foreach ($project->assignUser as $asUser) {
+                    array_push($assign, $asUser?->assinBy?->name);
+                }
+                if (count($assign) > 0) {
+                    $assignUsers = implode(', ', $assign);
+                } else {
+                    $assignUsers = '';
+                }
+                $data1 = [
+                    'type' => 'project',
+                    'project_type' => 'task',
+                    'id' => $project->id,
+                    'name' => $project->project_name . " (" . $assignUsers . ")",
+                    'start' => Carbon::parse($project->project_startdate)->format('Y-m-d H:i'),
+                    'end' => Carbon::parse($project->project_enddate)->format('Y-m-d H:i'),
+                    'progress' => $project->progress ?? 0,
+                    'hideChildren' => true,
+                    'detests' => $currentDateTime,
+                    'statusdelte' => $project->project_status,
+
+                    'styles' => [
+                        'backgroundColor' => '#CFD8D7',
+                        'progressSelectedColor' => ($project->project_status === 'completed') ? '#20BF55' : (($project->project_status === 'new') ? '#8E2DE2' : (($project->project_status === 'late') ? '#CD500C' : (($project->project_status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                    ],
+                ];
+
+                $data[] = $data1;
+            }
+        } else {
+            // Retrieve projects based on the user_id
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')->orderBy('id', 'DESC')->get();
+            // Prepare the JSON response
+            $data = [];
+            foreach ($projects as $project) {
+                $assign = [];
+                foreach ($project->assignUser as $asUser) {
+                    array_push($assign, $asUser?->assinBy?->name);
+                }
+                if (count($assign) > 0) {
+                    $assignUsers = implode(', ', $assign);
+                } else {
+                    $assignUsers = '';
+                }
+                $data1 = [
+                    'type' => 'project',
+                    'id' => $project->id,
+                    'project_type' => 'task',
+                    'name' => $project->project_name . " (" . $assignUsers . ")",
+                    'start' => Carbon::parse($project->project_startdate)->format('Y-m-d H:i'),
+                    'end' => Carbon::parse($project->project_enddate)->format('Y-m-d H:i'),
+                    'progress' => $project->progress ?? 0,
+                    'hideChildren' => true,
+                    'detests' => $currentDateTime,
+                    'statusdelte' => $project->project_status,
+
+                    'styles' => [
+                        'backgroundColor' => '#CFD8D7',
+                        'progressSelectedColor' => ($project->project_status === 'completed') ? '#20BF55' : (($project->project_status === 'new') ? '#8E2DE2' : (($project->project_status === 'late') ? '#CD500C' : (($project->project_status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                    ],
+                ];
+
+                $data[] = $data1;
+            }
+        }
+
+        // Return the JSON response
+        return response()->json($data);
+    }
+
+    public function showSubTasksByTask($user_id, $task_id)
+    {
+        $user = User::find($user_id);
+        $id = $user;
+        $currentDateTime = Carbon::now();
+        if ($user->role == 'Cliente' || $user->role == 'Digitador' || $user->role == 'Assistant' || $user->role == 'Supervisor') {
+            // Retrieve projects based on the user_id
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')
+                ->whereHas('assignUser', function ($quary) use ($user) {
+                    $quary->where('assign_user_id', $user->id);
+                })
+                ->orderBy('id', 'DESC')
+                ->get();
+            // Prepare the JSON response
+            $data = [];
+            foreach ($projects as $project) {
+                foreach ($project->tasks as $key => $task) {
+                    if($task->project_id == $task_id){
+                        $assign = [];
+                        foreach ($task->taskName->assignUser as $asUser) {
+                            array_push($assign, $asUser?->assinBy?->name);
+                        }
+                        if (count($assign) > 0) {
+                            $assignUsers = implode(', ', $assign);
+                        } else {
+                            $assignUsers = '';
+                        }
+                        $taskData = [
+                            'type' => 'project',
+                            'project_type' => 'sub_task',
+                            'parent_id' => $project->id,
+                            'id' => $project->id . '1788968' . $key,
+                            'name' => $task->taskName->title . " (" . $assignUsers . ")",
+                            'start' => Carbon::parse($task->taskName->start_date)->format('Y-m-d H:i'),
+                            'end' => Carbon::parse($task->taskName->end_date)->format('Y-m-d H:i'),
+                            'progress' => $task->taskName->progress ?? 0,
+                            'detests' => $currentDateTime,
+                            'statusdelte' => $task->taskName->status,
+    
+                            'styles' => [
+                                'backgroundColor' => '#CFD8D7',
+                                'progressSelectedColor' => ($task->status === 'completed') ? '#20BF55' : (($task->status === 'new') ? '#8E2DE2' : (($task->status === 'late') ? '#CD500C' : (($task->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                            ],
+                        ];
+    
+                        $data[] = $taskData;
+                    }
+                }
+            }
+        } else {
+            // Retrieve projects based on the user_id
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')->orderBy('id', 'DESC')->get();
+            // Prepare the JSON response
+            $data = [];
+            foreach ($projects as $project) {
+                foreach ($project->tasks as $key => $task) {
+                    if($task->project_id ==  $task_id){
+                        $assign = [];
+                        foreach ($task->taskName->assignUser as $asUser) {
+                            array_push($assign, $asUser?->assinBy?->name);
+                        }
+                        if (count($assign) > 0) {
+                            $assignUsers = implode(', ', $assign);
+                        } else {
+                            $assignUsers = '';
+                        }
+                        $taskData = [
+                            'type' => 'project',
+                            'project_type' => 'sub_task',
+                            'parent_id' => $project->id,
+                            'id' => $project->id . '1788968' . $key,
+                            'name' => $task->taskName->title . " (" . $assignUsers . ")",
+                            'start' => Carbon::parse($task->taskName->start_date)->format('Y-m-d H:i'),
+                            'end' => Carbon::parse($task->taskName->end_date)->format('Y-m-d H:i'),
+                            'progress' => $task->taskName->progress ?? 0,
+                            'detests' => $currentDateTime,
+                            'statusdelte' => $task->taskName->status,
+    
+                            'styles' => [
+                                'backgroundColor' => '#CFD8D7',
+                                'progressSelectedColor' => ($task->status === 'completed') ? '#20BF55' : (($task->status === 'new') ? '#8E2DE2' : (($task->status === 'late') ? '#CD500C' : (($task->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                            ],
+                        ];
+    
+                        $data[] = $taskData;
+                    }
+                }
+            }
+        }
+
+        // Return the JSON response
+        return response()->json($data);
+    }
+
+
+    public function showSubSubTasksBySubTask($user_id, $sub_task_id)
+    {
+        $user = User::find($user_id);
+        $id = $user;
+        $currentDateTime = Carbon::now();
+        if ($user->role == 'Cliente' || $user->role == 'Digitador' || $user->role == 'Assistant' || $user->role == 'Supervisor') {
+            // Retrieve projects based on the user_id
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')
+                ->whereHas('assignUser', function ($quary) use ($user) {
+                    $quary->where('assign_user_id', $user->id);
+                })
+                ->orderBy('id', 'DESC')
+                ->get();
+            // Prepare the JSON response
+            $data = [];
+            foreach ($projects as $project) {
+                foreach ($project->tasks as $key => $task) {
+                    foreach ($task->taskName->subTask as $subkey => $stask) {
+                        $assignSub = [];
+                        foreach ($stask->assignUser as $asUser) {
+                            array_push($assignSub, $asUser?->assinBy?->name);
+                        }
+                        if (count($assignSub) > 0) {
+                            $assignsubUsers = implode(', ', $assignSub);
+                        } else {
+                            $assignsubUsers = '';
+                        }
+                        $subTaskData = [
+                            'type' => 'project',
+                            'parent_id' => $project->id . '1788968' . $key,
+                            'project_type' => 'sub_sub_task',
+                            'id' => $project->id . $subkey,
+                            'name' => $stask->title . " (" . $assignsubUsers . ")",
+                            'start' => Carbon::parse($stask->start_date)->format('Y-m-d H:i'),
+                            'end' => Carbon::parse($stask->end_date)->format('Y-m-d H:i'),
+                            'progress' => $stask->progress ?? 0,
+                            'detests' => $currentDateTime,
+                            'statusdelte' => $stask->status,
+                            'styles' => [
+                                'backgroundColor' => '#CFD8D7',
+                                'progressSelectedColor' => ($stask->status === 'completed') ? '#20BF55' : (($stask->status === 'new') ? '#8E2DE2' : (($stask->status === 'late') ? '#CD500C' : (($stask->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                            ],
+                        ];
+                    //    if ($stask->parent_id == $sub_task_id) {
+                            $data[] = $subTaskData;
+                        // }
+                    }
+                }
+            }
+        } else {
+            // Retrieve projects based on the user_id
+            $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')->orderBy('id', 'DESC')->get();
+            // Prepare the JSON response
+            $data = [];
+            foreach ($projects as $project) {
+                foreach ($project->tasks as $key => $task) {
+                    foreach ($task->taskName->subTask as $subkey => $stask) {
+                        $assignSub = [];
+                        foreach ($stask->assignUser as $asUser) {
+                            array_push($assignSub, $asUser?->assinBy?->name);
+                        }
+                        if (count($assignSub) > 0) {
+                            $assignsubUsers = implode(', ', $assignSub);
+                        } else {
+                            $assignsubUsers = '';
+                        }
+                        $subTaskData = [
+                            'type' => 'project',
+                            'parent_id' => $project->id . '1788968' . $key,
+                            'project_type' => 'sub_sub_task',
+                            'id' => $project->id . $subkey,
+                            'name' => $stask->title . " (" . $assignsubUsers . ")",
+                            'start' => Carbon::parse($stask->start_date)->format('Y-m-d H:i'),
+                            'end' => Carbon::parse($stask->end_date)->format('Y-m-d H:i'),
+                            'progress' => $stask->progress ?? 0,
+                            'detests' => $currentDateTime,
+                            'statusdelte' => $stask->status,
+                            'styles' => [
+                                'backgroundColor' => '#CFD8D7',
+                                'progressSelectedColor' => ($stask->status === 'completed') ? '#20BF55' : (($stask->status === 'new') ? '#8E2DE2' : (($stask->status === 'late') ? '#CD500C' : (($stask->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                            ],
+                        ];
+                        // if ($stask->parent_id == $sub_task_id) {
+                            $data[] = $subTaskData;
+                        // }
+                    }
+                }
+            }
+            
+        }
+        $sub_sub_tasks_data = [];
+        foreach ($data as $data_sub) {
+            if ($data_sub['parent_id'] == $sub_task_id) {
+                $sub_sub_tasks_data[] = $data_sub; // Use array push to add to the array
+            }
+        }
+        
+
+        // Return the JSON response
+        return response()->json($sub_sub_tasks_data);
+    }
+
+
+    private function getAssignedUsers($assignUsers)
+    {
+        return implode(', ', array_filter($assignUsers->map(fn($asUser) => $asUser?->assinBy?->name)->toArray()));
+    }
+
+    private function getStyles($status)
+    {
+        return [
+            'backgroundColor' => '#CFD8D7',
+            'progressSelectedColor' => match ($status) {
+                'completed' => '#20BF55',
+                'new' => '#8E2DE2',
+                'late' => '#CD500C',
+                'pending' => '#D9BB41',
+                default => '#4A00E0',
+            },
+        ];
     }
 }

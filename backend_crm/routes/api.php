@@ -81,6 +81,9 @@ Route::controller(DashboardController::class)->group(function() {
     //Route::get('celender/{user_id}', 'index');
     Route::get('calendar/{user_id}', 'showTasksByMonth');
      Route::get('ganttchart/{user_id}', 'showGanttChart');
+     Route::get('ganttchart/tasks/{user_id}', 'showTasks');
+     Route::get('ganttchart/subtasks/{user_id}/{task_id}', 'showSubTasksByTask');
+     Route::get('ganttchart/subsubtasks/{user_id}/{sub_task_id}', 'showSubSubTasksBySubTask');
 
 });
 
