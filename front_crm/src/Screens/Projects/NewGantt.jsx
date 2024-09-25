@@ -58,15 +58,24 @@ const NewGantt = () => {
         (child) =>
           child.parent_id === task.id && child.project_type === "sub_task"
       );
+      console.log("okay");
       const divFrom = document.querySelector(
         'div[style*="display: table-cell;"][style*="vertical-align: middle;"][style*="overflow: hidden;"][style*="text-overflow: ellipsis;"][style*="min-width: 150px;"][style*="max-width: 150px;"]'
       );
+    
       if (divFrom) {
-        divFrom.style.overflowX = "auto";
+         divFrom.style.overflow = "";
+         const isFirefox = typeof InstallTrigger !== 'undefined';
+         if (isFirefox) {
+          divFrom.style.display = "inline-block";
+         }
+        divFrom.style.overflow = "auto";
         divFrom.style.textOverflow = "clip";
         divFrom.style.whiteSpace = "nowrap";
-        divFrom.style.cursor = "nowrap";
+        divFrom.style.cursor = "default";
       }
+
+      
       acc.push({
         ...task,
         name: (
@@ -131,7 +140,7 @@ const NewGantt = () => {
               acc.push({
                 ...subSubTask,
                 name: (
-                  <div style={{ paddingLeft: "2rem" }}>
+                  <div style={{ marginLeft: "1rem" }}>
                     {subSubTask.name}
                   </div>
                 ),

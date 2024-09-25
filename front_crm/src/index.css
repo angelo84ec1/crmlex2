@@ -1404,16 +1404,6 @@ s .sidebar.open .logouts {
   height: 88vh;
 }
 
-::-webkit-scrollbar {
-  background: rgba(196, 196, 196, 0.8);
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: #999999;
-}
-
 .canvasjs-chart-credit {
   display: none;
 }
@@ -1434,12 +1424,15 @@ s .sidebar.open .logouts {
 }
 
 ::-webkit-scrollbar {
-  background: rgba(196, 196, 196, 0.8);
-  height: 7px;
+  background: rgba(196, 196, 196, 0.8) !important;
+  height: 7px !important;
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: linear-gradient(45deg, #4A00E0, #8E2DE2);
+  border-radius: 5px !important;
+  background: linear-gradient(45deg, #4A00E0, #8E2DE2) !important;
 }
 
-/*# sourceMappingURL=dashboard.css.map */
+.firefox * {
+  scrollbar-width: thin; 
+  scrollbar-color: #4A00E0 rgba(196, 196, 196, 0.8);
+}

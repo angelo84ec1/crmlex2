@@ -37,6 +37,11 @@ i18n
   });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const isFirefox = typeof InstallTrigger !== 'undefined';
+
+if (isFirefox) {
+  document.body.classList.add('firefox');
+}
 
 root.render(
   <React.StrictMode>
