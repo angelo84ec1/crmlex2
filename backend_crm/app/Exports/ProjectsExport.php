@@ -64,8 +64,12 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
 
         foreach ($this->projects as $project) {
             $assignedProjectUsers = $project->assignUser
-                ? $project->assignUser->map(fn($assignUser) => $assignUser->assinBy->name)->implode(', ')
-                : '';
+            ? $project->assignUser
+                ->filter(fn($assignUser) => !empty($assignUser->assinBy->name))
+                ->map(fn($assignUser) => $assignUser->assinBy->name)
+                ->implode(', ')
+            : '';
+        
 
             $this->data[] = [
                 'project_name' => $project->project_name,
@@ -88,7 +92,9 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                     ];
                 }
                 $assignedTaskUsers = $task->taskName->assignUser
-                    ? $task->taskName->assignUser->map(fn($taskAssignUser) => $taskAssignUser->assinBy->name)->implode(', ')
+                    ? $task->taskName->assignUser
+                    ->filter(fn($assignUser) => !empty($assignUser->assinBy->name))
+                    ->map(fn($taskAssignUser) => $taskAssignUser->assinBy->name)->implode(', ')
                     : '';
 
                 $this->data[] = [
@@ -112,7 +118,9 @@ class ProjectsExport implements FromCollection, WithHeadings, WithMapping, WithS
                         ];
                     }
                     $assignedSubTaskUsers = $subTask->subTaskName->assignUser
-                        ? $subTask->subTaskName->assignUser->map(fn($subTaskAssignUser) => $subTaskAssignUser->assinBy->name)->implode(', ')
+                        ? $subTask->subTaskName->assignUser
+                        ->filter(fn($assignUser) => !empty($assignUser->assinBy->name))
+                        ->map(fn($subTaskAssignUser) => $subTaskAssignUser->assinBy->name)->implode(', ')
                         : '';
 
                     $this->data[] = [
