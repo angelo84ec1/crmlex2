@@ -31,8 +31,8 @@ class XlController extends Controller
                     $query->where('assign_user_id', $id);
                 })
                 ->orderBy('id', 'DESC')
-                ->skip(($page - 1) * $projectsPerPage)
-                ->take($projectsPerPage)
+                // ->skip(($page - 1) * $projectsPerPage)
+                // ->take($projectsPerPage)
                 ->get();
         } else {
             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
@@ -40,8 +40,8 @@ class XlController extends Controller
                 ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName')
                 ->orderBy('id', 'DESC')
-                ->skip(($page - 1) * $projectsPerPage)
-                ->take($projectsPerPage)
+                // ->skip(($page - 1) * $projectsPerPage)
+                // ->take($projectsPerPage)
                 ->get();
         }
         // echo "<pre>";

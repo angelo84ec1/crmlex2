@@ -399,7 +399,8 @@ export default function TaskTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search] = React.useState(projectTasks);
   const [addTaskBtn, setAddTaskBtn] = React.useState(true);
-
+  const [showAddTask, setShowAddTask] = React.useState(false);
+  
   const { t } = useTranslation();
   const contentRef = React.useRef("");
   const ref = React.useRef(null);
@@ -472,6 +473,7 @@ export default function TaskTable() {
   };
 
   const addTask = () => {
+    setShowAddTask(true);
     ref.current.click();
   };
 
@@ -593,7 +595,7 @@ export default function TaskTable() {
             <Typography align="center">{t("no_item_found")}</Typography>
           </Box>
 
-          <AddTaskPop ref={ref} setAddTaskBtn={setAddTaskBtn} />
+          {showAddTask && <AddTaskPop setAddTaskBtn={setAddTaskBtn} />}
         </TableContainer>
 
         <TablePagination

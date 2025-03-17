@@ -42,33 +42,45 @@ class DashboardController extends Controller
         $id = $user_id;
 
         if ($user->role == 'Cliente' or  $user->role == 'Digitador' or  $user->role == 'Assistant' or  $user->role == 'Supervisor') {
-            $totalProjects = Project::with('tasks.taskName', 'assignUser.assinBy')
-                ->whereHas('assignUser', function ($query) use ($id) {
-                    $query->where('assign_user_id', $id);
-                })
-                ->count();
-            // $totalTasks = ProjectTask::with('tasksAssignUser')
-            //     ->whereHas('tasksAssignUser', function ($query) use ($id) {
-            //         $query->where('assign_user_id', $id);
-            //     })->count();
-            $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
-            $totalSubTasks = SubTaskAssignUser::where('assign_user_id', $id)->count();
+            $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
+            ->with('tasks.taskName.assignUser.assinBy')
+            ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
+            ->with('tasks.subTasks.subTaskName')
+            ->whereHas('assignUser', function ($query) use ($id) {
+                $query->where('assign_user_id', $id);
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
 
+            $statusesArray = [];
+            $totalProjects = 0;
+            $totalTasks = 0;
+            $totalSubTasks = 0;
+            foreach ($projects as $project) {
+                $totalProjects++;
+                if (isset($project['tasks'])) {
+                    foreach ($project['tasks'] as $task) {
+                        $totalTasks++;
+                        if (isset($task['subTasks'])) {
+                            foreach ($task['subTasks'] as $subTasks) {
+                                $statusesArray[] = $subTasks['subTaskName']['status'];
+                                $totalSubTasks++;
+                            }
+                        }
+                    }
+                }
+            }
             $statuses = ['pending', 'active', 'completed', 'new', 'late'];
             $statusCounts = array_fill_keys($statuses, 0);
-            $tasks = SubTaskAssignUser::join('new_sub_tasks', 'new_sub_tasks.id', 'sub_task_assign_users.new_sub_task_id')->select('new_sub_tasks.status', DB::raw('count(*) as count'))
-                ->where('sub_task_assign_users.assign_user_id', $id)
-                ->groupBy('new_sub_tasks.status')
-                ->pluck('count', 'status');
-
-            foreach ($tasks as $status => $count) {
-                $statusCounts[$status] = $count;
+            
+            foreach ($statusesArray as $status) {
+                $statusCounts[$status] += 1;
             }
 
             $subTaskStatusPercentage = [];
             foreach ($statuses as $status) {
                 $count = $statusCounts[$status];
-                $percentage = $totalSubTasks > 0 ? round(($count / $totalSubTasks) * 100) : 0;
+                $percentage = $totalSubTasks > 0 ? round(($count / $totalSubTasks) * 100, 1) : 0;
                 $subTaskStatusPercentage[] = [
                     'name' => $status,
                     'SubTareas' => $percentage,
@@ -116,27 +128,6 @@ class DashboardController extends Controller
                 ->where('project_status', 'pending')
                 ->count();
 
-
-            $graphData = [
-                'completed' => Project::with('tasks.taskName', 'assignUser.assinBy')
-                    ->whereHas('assignUser', function ($query) use ($id) {
-                        $query->where('assign_user_id', $id);
-                    })
-                    ->where('project_status', 'completed')
-                    ->count(),
-                'active' => Project::with('tasks.taskName', 'assignUser.assinBy')
-                    ->whereHas('assignUser', function ($query) use ($id) {
-                        $query->where('assign_user_id', $id);
-                    })
-                    ->where('project_status', 'active')
-                    ->count(),
-                'ended' => Project::with('tasks.taskName', 'assignUser.assinBy')
-                    ->whereHas('assignUser', function ($query) use ($id) {
-                        $query->where('assign_user_id', $id);
-                    })
-                    ->where('project_status', 'ended')
-                    ->count()
-            ];
             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
                 ->whereHas('assignUser', function ($query) use ($id) {
                     $query->where('assign_user_id', $id);
@@ -144,38 +135,42 @@ class DashboardController extends Controller
                 //            ->where('project_status', 'pending')
                 ->get();
         } else {
-            //        $totalProjects = Project::count();
-            $totalProjects = Project::with('tasks.taskName', 'assignUser.assinBy')
-                ->whereHas('assignUser', function ($query) use ($id) {
-                    $query->where('assign_user_id', $id);
-                })
-                ->count();
-            $totalTasks = NewTaskAssignUser::where('assign_user_id', $id)->count();
-            // $totalTasks = ProjectTask::with('tasksAssignUser')
-            //     ->whereHas('tasksAssignUser', function ($query) use ($id) {
-            //         $query->where('assign_user_id', $id);
-            //     })->count();
-            // $totalSubTasks = ProjectSubTask::with('subTasksAssignUser')
-            //     ->whereHas('subTasksAssignUser', function ($query) use ($id) {
-            //         $query->where('assign_user_id', $id);
-            //     })->count();
-            $totalSubTasks = SubTaskAssignUser::where('assign_user_id', $id)->count();
+             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
+                ->with('tasks.taskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName')
+                ->orderBy('id', 'DESC')
+                ->get();
 
-            $statuses = ['pending', 'active', 'completed', 'new', 'late'];
-            $statusCounts = array_fill_keys($statuses, 0);
-            $tasks = SubTaskAssignUser::join('new_sub_tasks', 'new_sub_tasks.id', 'sub_task_assign_users.new_sub_task_id')->select('new_sub_tasks.status', DB::raw('count(*) as count'))
-                ->where('sub_task_assign_users.assign_user_id', $id)
-                ->groupBy('new_sub_tasks.status')
-                ->pluck('count', 'status');
-
-            foreach ($tasks as $status => $count) {
-                $statusCounts[$status] = $count;
-            }
+                $statusesArray = [];
+                $totalProjects = 0;
+                $totalTasks = 0;
+                $totalSubTasks = 0;
+                foreach ($projects as $project) {
+                    $totalProjects++;
+                    if (isset($project['tasks'])) {
+                        foreach ($project['tasks'] as $task) {
+                            $totalTasks++;
+                            if (isset($task['subTasks'])) {
+                                foreach ($task['subTasks'] as $subTasks) {
+                                    $statusesArray[] = $subTasks['subTaskName']['status'];
+                                    $totalSubTasks++;
+                                }
+                            }
+                        }
+                    }
+                }
+                $statuses = ['pending', 'active', 'completed', 'new', 'late'];
+                $statusCounts = array_fill_keys($statuses, 0);
+                
+                foreach ($statusesArray as $status) {
+                    $statusCounts[$status] += 1;
+                }
 
             $subTaskStatusPercentage = [];
             foreach ($statuses as $status) {
                 $count = $statusCounts[$status];
-                $percentage = $totalSubTasks > 0 ? round(($count / $totalSubTasks) * 100) : 0;
+                $percentage = $totalSubTasks > 0 ? round(($count / $totalSubTasks) * 100, 1) : 0;
                 $subTaskStatusPercentage[] = [
                     'name' => $status,
                     'SubTareas' => $percentage,
@@ -183,8 +178,6 @@ class DashboardController extends Controller
                 ];
             }
 
-
-            //        $totalTasks = ProjectTask::join('projects', 'projects.id', '=', 'projects_task.project_id')->count();
             $totalUsers = User::count();
             $completedProjects = Project::where('project_status', 'completed')->count();
             $activeProjects = Project::where('project_status', 'active')->count();
@@ -217,7 +210,6 @@ class DashboardController extends Controller
                 ->join('projects_assign_user', 'projects.id', '=', 'projects_assign_user.project_id')
                 ->join('users', 'projects_assign_user.assign_user_id', '=', 'users.id')
                 ->where('projects_assign_user.assign_user_id', $userId)
-                //                    ->where('projects.project_status', 'pending')
                 ->get();
 
             $baseURL = URL::to('/');
@@ -226,9 +218,6 @@ class DashboardController extends Controller
                 $project->user_pic = $baseURL . '/' . $project->user_pic;
                 return $project;
             });
-
-            // Now the user_pic column in $projects collection will have the full URL
-
         }
         $this->taskUpdate();
 
@@ -349,7 +338,7 @@ class DashboardController extends Controller
     public function showGanttChart($user_id)
     {
         $user = User::find($user_id);
-        $id = $user;
+        $id = $user_id;
         $currentDateTime = Carbon::now();
         if ($user->role == 'Cliente' || $user->role == 'Digitador' || $user->role == 'Assistant' || $user->role == 'Supervisor') {
             // Retrieve projects based on the user_id

@@ -20,6 +20,7 @@ const NewGantt = () => {
   const [expandedSubTasks, setExpandedSubTasks] = React.useState({});
   const [showSubTasks, setShowSubTasks] = React.useState(false);
 
+  console.log(parentTasks);
   const handleChange = (event) => {
     setViewMode(event.target.value);
   };

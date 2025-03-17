@@ -36,8 +36,6 @@ export const fetchGanttChart = createAsyncThunk(
     try {
       const response = await axios.get(`${import.meta.env.VITE_REACT_API_URL}/api/ganttchart/${params}`);
       // const response = await axios.get(`${import.meta.env.VITE_REACT_API_URL}/api/dashboard/1`);
-      console.log("okay")
-      console.log(response.data.length)
       return response.data;
 
     } catch (error) {
@@ -107,8 +105,8 @@ const dashboardSlice = createSlice({
       state.status = 'succeeded';
       
       state.ganttChart = action.payload
-      // .filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
-      // .filter((v, i, a) => a.findIndex(t => (t.name.split(" ")[0]+" "+t.name.split(" ")[1] === v.name.split(" ")[0]+" "+v.name.split(" ")[1])) === i)
+      .filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
+      .filter((v, i, a) => a.findIndex(t => (t.name.split(" ")[0]+" "+t.name.split(" ")[1] === v.name.split(" ")[0]+" "+v.name.split(" ")[1])) === i)
       .map(obj => ({
         ...obj,
         start: new Date(obj.start),
