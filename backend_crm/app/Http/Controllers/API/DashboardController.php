@@ -43,36 +43,46 @@ class DashboardController extends Controller
 
         if ($user->role == 'Cliente' or  $user->role == 'Digitador' or  $user->role == 'Assistant' or  $user->role == 'Supervisor') {
             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
-            ->with('tasks.taskName.assignUser.assinBy')
-            ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
-            ->with('tasks.subTasks.subTaskName')
-            ->whereHas('assignUser', function ($query) use ($id) {
-                $query->where('assign_user_id', $id);
-            })
-            ->orderBy('id', 'DESC')
-            ->get();
+                ->with('tasks.taskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
+                ->with('tasks.subTasks.subTaskName')
+                ->whereHas('assignUser', function ($query) use ($id) {
+                    $query->where('assign_user_id', $id);
+                })
+                ->orderBy('id', 'DESC')
+                ->get();
 
-            $statusesArray = [];
             $totalProjects = 0;
-            $totalTasks = 0;
-            $totalSubTasks = 0;
+            $totalTasks    = 0;
+            $uniqueSubTasks = collect();
+            $statusesArray = [];
+
             foreach ($projects as $project) {
                 $totalProjects++;
-                if (isset($project['tasks'])) {
+                if (!empty($project['tasks'])) {
                     foreach ($project['tasks'] as $task) {
                         $totalTasks++;
-                        if (isset($task['subTasks'])) {
-                            foreach ($task['subTasks'] as $subTasks) {
-                                $statusesArray[] = $subTasks['subTaskName']['status'];
-                                $totalSubTasks++;
+                        if (!empty($task['subTasks'])) {
+                            foreach ($task['subTasks'] as $subTask) {
+                                // Assuming each subTask has a unique 'id'
+                                if (!$uniqueSubTasks->contains('id', $subTask['id'])) {
+                                    $uniqueSubTasks->push($subTask);
+                                    // Collect status from the related subTaskName if it exists
+                                    if (isset($subTask['subTaskName']['status'])) {
+                                        $statusesArray[] = $subTask['subTaskName']['status'];
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+
+            $totalSubTasks = $uniqueSubTasks->count();
+
             $statuses = ['pending', 'active', 'completed', 'new', 'late'];
             $statusCounts = array_fill_keys($statuses, 0);
-            
+
             foreach ($statusesArray as $status) {
                 $statusCounts[$status] += 1;
             }
@@ -135,37 +145,46 @@ class DashboardController extends Controller
                 //            ->where('project_status', 'pending')
                 ->get();
         } else {
-             $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
+            $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
                 ->with('tasks.taskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName')
                 ->orderBy('id', 'DESC')
                 ->get();
 
-                $statusesArray = [];
-                $totalProjects = 0;
-                $totalTasks = 0;
-                $totalSubTasks = 0;
-                foreach ($projects as $project) {
-                    $totalProjects++;
-                    if (isset($project['tasks'])) {
-                        foreach ($project['tasks'] as $task) {
-                            $totalTasks++;
-                            if (isset($task['subTasks'])) {
-                                foreach ($task['subTasks'] as $subTasks) {
-                                    $statusesArray[] = $subTasks['subTaskName']['status'];
-                                    $totalSubTasks++;
+            $totalProjects = 0;
+            $totalTasks    = 0;
+            $uniqueSubTasks = collect();
+            $statusesArray = [];
+
+            foreach ($projects as $project) {
+                $totalProjects++;
+                if (!empty($project['tasks'])) {
+                    foreach ($project['tasks'] as $task) {
+                        $totalTasks++;
+                        if (!empty($task['subTasks'])) {
+                            foreach ($task['subTasks'] as $subTask) {
+                                // Assuming each subTask has a unique 'id'
+                                if (!$uniqueSubTasks->contains('id', $subTask['id'])) {
+                                    $uniqueSubTasks->push($subTask);
+                                    // Collect status from the related subTaskName if it exists
+                                    if (isset($subTask['subTaskName']['status'])) {
+                                        $statusesArray[] = $subTask['subTaskName']['status'];
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                $statuses = ['pending', 'active', 'completed', 'new', 'late'];
-                $statusCounts = array_fill_keys($statuses, 0);
-                
-                foreach ($statusesArray as $status) {
-                    $statusCounts[$status] += 1;
-                }
+            }
+
+            $totalSubTasks = $uniqueSubTasks->count();
+            $statuses = ['pending', 'active', 'completed', 'new', 'late'];
+            $statusCounts = array_fill_keys($statuses, 0);
+
+            foreach ($statusesArray as $status) {
+                $statusCounts[$status] += 1;
+            }
 
             $subTaskStatusPercentage = [];
             foreach ($statuses as $status) {
@@ -348,7 +367,7 @@ class DashboardController extends Controller
             //     })
             //     ->orderBy('id', 'DESC')
             //     ->get();
-                $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
+            $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
                 ->with('tasks.taskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
                 ->with('tasks.subTasks.subTaskName')
@@ -665,8 +684,8 @@ class DashboardController extends Controller
             $data = [];
             foreach ($projects as $project_key => $project) {
                 foreach ($project->tasks as $key => $task) {
-                   
-                    if($task->project_id == $task_id){
+
+                    if ($task->project_id == $task_id) {
                         $assign = [];
                         foreach ($task->taskName->assignUser as $asUser) {
                             array_push($assign, $asUser?->assinBy?->name);
@@ -687,13 +706,13 @@ class DashboardController extends Controller
                             'progress' => $task->taskName->progress ?? 0,
                             'detests' => $currentDateTime,
                             'statusdelte' => $task->taskName->status,
-    
+
                             'styles' => [
                                 'backgroundColor' => '#CFD8D7',
                                 'progressSelectedColor' => ($task->status === 'completed') ? '#20BF55' : (($task->status === 'new') ? '#8E2DE2' : (($task->status === 'late') ? '#CD500C' : (($task->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
                             ],
                         ];
-    
+
                         $data[] = $taskData;
                     }
                 }
@@ -706,7 +725,7 @@ class DashboardController extends Controller
             foreach ($projects as $project_key => $project) {
                 foreach ($project->tasks as $key => $task) {
                     // dd($task);
-                    if($task->project_id ==  $task_id){
+                    if ($task->project_id ==  $task_id) {
                         $assign = [];
                         foreach ($task->taskName->assignUser as $asUser) {
                             array_push($assign, $asUser?->assinBy?->name);
@@ -727,13 +746,13 @@ class DashboardController extends Controller
                             'progress' => $task->taskName->progress ?? 0,
                             'detests' => $currentDateTime,
                             'statusdelte' => $task->taskName->status,
-    
+
                             'styles' => [
                                 'backgroundColor' => '#CFD8D7',
                                 'progressSelectedColor' => ($task->status === 'completed') ? '#20BF55' : (($task->status === 'new') ? '#8E2DE2' : (($task->status === 'late') ? '#CD500C' : (($task->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
                             ],
                         ];
-    
+
                         $data[] = $taskData;
                     }
                 }
@@ -746,65 +765,66 @@ class DashboardController extends Controller
 
 
     public function showSubSubTasksBySubTask($user_id, $sub_task_id)
-    {$currentDateTime = Carbon::now();
+    {
+        $currentDateTime = Carbon::now();
         // $projects = Project::with('assignUser.assinBy', 'tasks.taskName.assignUser.assinBy', 'tasks.taskName.subTask.assignUser.assinBy')->where('projects.id', 207)->orderBy('id', 'DESC')->get();
         $projects = Project::with('tasks.taskName', 'assignUser.assinBy')
-                ->with('tasks.taskName.assignUser.assinBy')
-                ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
-                ->with('tasks.subTasks.subTaskName')
-                ->orderBy('id', 'DESC')
-                ->where('projects.id', 207)
-                ->get();
+            ->with('tasks.taskName.assignUser.assinBy')
+            ->with('tasks.subTasks.subTaskName.assignUser.assinBy')
+            ->with('tasks.subTasks.subTaskName')
+            ->orderBy('id', 'DESC')
+            ->where('projects.id', 207)
+            ->get();
         // return $projects;
-            // Prepare the JSON response
-            $data = [];
-            foreach ($projects as $project) {
-                foreach ($project->tasks as $key => $task) {
-                    foreach ($task->taskName->subTask as $subkey => $stask) {
-                        $assignSub = [];
-                        foreach ($stask->assignUser as $asUser) {
-                            array_push($assignSub, $asUser?->assinBy?->name);
-                        }
+        // Prepare the JSON response
+        $data = [];
+        foreach ($projects as $project) {
+            foreach ($project->tasks as $key => $task) {
+                foreach ($task->taskName->subTask as $subkey => $stask) {
+                    $assignSub = [];
+                    foreach ($stask->assignUser as $asUser) {
+                        array_push($assignSub, $asUser?->assinBy?->name);
+                    }
                     // foreach ($task->subTasks as $subkey => $stask) {
                     //     // return $stask;
                     //     $assignSub = [];
                     //     foreach ($stask->subTaskName->assignUser as $asUser) {
                     //         array_push($assignSub, $asUser?->assinBy?->name);
                     //     }
-                        if (count($assignSub) > 0) {
-                            $assignsubUsers = implode(', ', $assignSub);
-                        } else {
-                            $assignsubUsers = '';
-                        }
-                        $subTaskData = [
-                            'type' => 'project',
-                            'parent_id' => $project->id . '1788968' . $key,
-                            'project_type' => 'sub_sub_task',
-                            'id' => $stask->id,
-                            'name' => $stask->title . " (" . $assignsubUsers . ")",
-                            'start' => Carbon::parse($stask->start_date)->format('Y-m-d H:i'),
-                            'end' => Carbon::parse($stask->end_date)->format('Y-m-d H:i'),
-                            'progress' => $stask->progress ?? 0,
-                            'detests' => $currentDateTime,
-                            'statusdelte' => $stask->status,
-                            'styles' => [
-                                'backgroundColor' => '#CFD8D7',
-                                'progressSelectedColor' => ($stask->status === 'completed') ? '#20BF55' : (($stask->status === 'new') ? '#8E2DE2' : (($stask->status === 'late') ? '#CD500C' : (($stask->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
-                            ],
-                        ];
-                        $data[] = $subTaskData;
+                    if (count($assignSub) > 0) {
+                        $assignsubUsers = implode(', ', $assignSub);
+                    } else {
+                        $assignsubUsers = '';
                     }
+                    $subTaskData = [
+                        'type' => 'project',
+                        'parent_id' => $project->id . '1788968' . $key,
+                        'project_type' => 'sub_sub_task',
+                        'id' => $stask->id,
+                        'name' => $stask->title . " (" . $assignsubUsers . ")",
+                        'start' => Carbon::parse($stask->start_date)->format('Y-m-d H:i'),
+                        'end' => Carbon::parse($stask->end_date)->format('Y-m-d H:i'),
+                        'progress' => $stask->progress ?? 0,
+                        'detests' => $currentDateTime,
+                        'statusdelte' => $stask->status,
+                        'styles' => [
+                            'backgroundColor' => '#CFD8D7',
+                            'progressSelectedColor' => ($stask->status === 'completed') ? '#20BF55' : (($stask->status === 'new') ? '#8E2DE2' : (($stask->status === 'late') ? '#CD500C' : (($stask->status === 'pending') ? '#D9BB41' : '#4A00E0'))),
+                        ],
+                    ];
+                    $data[] = $subTaskData;
                 }
             }
-        
+        }
+
         // return $data;
-        
+
         // foreach ($data as $data_sub) {
         //     if ($data_sub['parent_id'] == $sub_task_id) {
         //         $sub_sub_tasks_data[] = $data_sub; // Use array push to add to the array
         //     }
         // }
-        
+
 
         // Return the JSON response
         return response()->json($data);

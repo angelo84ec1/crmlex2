@@ -304,14 +304,9 @@ function Row(props) {
                         } currentTask={tasksRow?.sub_task_name} /> */}
                             <SubTaskMultiSelect
                               options={
-                                row.item?.task_name?.assign_user
-                                  ?.filter((item) => item?.assin_by?.name)
-                                  ?.map((item) => ({
-                                    name: item.assin_by.name,
-                                    id: item.assign_user_id,
-                                  })) || []
+                                tasksRow?.sub_task_name?.assign_user?.map(item => ({ name: item.assin_by.name, id: item.assign_user_id })) || []
                               }
-                              currentTask={row.item?.task_name}
+                              currentTask={tasksRow?.sub_task_name}
                             />
                           </TableCell>
                           <TableCell
